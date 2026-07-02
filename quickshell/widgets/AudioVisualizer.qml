@@ -26,10 +26,10 @@ Rectangle {
         barHeights = temp;
     }
 
-    // Process to check if any audio sink inputs are actively playing (uncorked)
     Process {
         id: checkAudioProcess
-        command: ["sh", "-c", "pactl list sink-inputs | grep -q 'Corked: no' && echo 1 || echo 0"]
+        command: ["sh", "-c", "while true; do pactl list sink-inputs | grep -q 'Corked: no' && echo 1 || echo 0; sleep 0.2; done"]
+        running: true
         stdout: SplitParser {
             onRead: data => {
                 visualizerBox.audioActive = (data.trim() === "1");
@@ -37,17 +37,6 @@ Rectangle {
         }
     }
 
-    // Poll audio activity every 200ms for near-instant feedback
-    Timer {
-        id: audioCheckTimer
-        interval: 200
-        running: true
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: checkAudioProcess.running = true
-    }
-
-    // Animation Timer
     Timer {
         interval: 100
         running: true
