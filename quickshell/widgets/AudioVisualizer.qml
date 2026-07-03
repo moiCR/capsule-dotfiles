@@ -5,18 +5,25 @@ import "root:/theme"
 Rectangle {
     id: visualizerBox
 
-    width: 90
-    height: 24
+    property bool isVertical: Theme.barPosition === "left" || Theme.barPosition === "right"
+    property bool showBox: true
+
+    width: showBox ? (isVertical ? 40 : 90) : (numBars * 2 + (numBars - 1) * 2)
+    height: showBox ? 24 : 12
     radius: 8
     
-    // OLED black box with accent border highlight
-    color: "#000000"
-    border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.25)
-    border.width: 1
+    implicitWidth: width
+    implicitHeight: height
 
-    property int numBars: 10
+    // OLED black box with accent border highlight
+    color: showBox ? "#000000" : "transparent"
+    border.color: showBox ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.25) : "transparent"
+    border.width: showBox ? 1 : 0
+
+    property int numBars: isVertical ? 5 : 10
     property var barHeights: []
     property bool audioActive: false
+    property color barColor: Theme.accent
 
     Component.onCompleted: {
         let temp = [];
@@ -38,17 +45,17 @@ Rectangle {
     }
 
     Timer {
+        id: visualizerTimer
         interval: 100
         running: true
         repeat: true
         onTriggered: {
             let temp = [];
+            let maxH = showBox ? 14 : 10; // lower height in compact mode
             for (let i = 0; i < numBars; i++) {
                 if (visualizerBox.audioActive) {
-                    // Generate bouncing visualizer heights when sound is playing
-                    temp.push(3 + Math.random() * 14);
+                    temp.push(2 + Math.random() * maxH);
                 } else {
-                    // Default flat line (2px height) when idle
                     temp.push(2);
                 }
             }
@@ -58,20 +65,19 @@ Rectangle {
 
     Row {
         anchors.centerIn: parent
-        spacing: 3
-        height: 16
+        spacing: 2
+        height: showBox ? 16 : 12
 
         Repeater {
             model: visualizerBox.numBars
 
             delegate: Rectangle {
-                width: 3
+                width: 2
                 height: (visualizerBox.barHeights && visualizerBox.barHeights.length > index) ? visualizerBox.barHeights[index] : 2
-                radius: 1.5
+                radius: 1
                 anchors.bottom: parent.bottom
                 
-                // Colors match current accent theme
-                color: Theme.accent
+                color: visualizerBox.barColor
                 
                 Behavior on height {
                     NumberAnimation {

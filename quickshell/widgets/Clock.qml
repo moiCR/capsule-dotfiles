@@ -6,11 +6,12 @@ import "root:/theme"
 Item {
     id: root
 
-    implicitWidth: textItem.implicitWidth
-    implicitHeight: 24
+    property bool isVertical: Theme.barPosition === "left" || Theme.barPosition === "right"
+
+    implicitWidth: isVertical ? 44 : textItem.implicitWidth
+    implicitHeight: isVertical ? 34 : 24
     width: implicitWidth
     height: implicitHeight
-    anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
     property bool menuOpen: false
 
@@ -115,6 +116,8 @@ Item {
         anchors.centerIn: parent
         height: parent.height
         verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+        lineHeight: 0.95
         text: {
             const d = root.clock.date;
             const dayName = (Theme.t.days && Theme.t.days[d.getDay()] !== undefined) ? Theme.t.days[d.getDay()] : Qt.formatDateTime(d, "ddd");
@@ -127,13 +130,17 @@ Item {
             hours = hours % 12;
             hours = hours ? hours : 12;
             minutes = minutes < 10 ? '0'+minutes : minutes;
-            let timeStr = hours + ":" + minutes + " " + ampm;
+            let timeStr = hours + ":" + minutes;
             
-            return dayName + ", " + monthName + " " + day + " - " + timeStr;
+            if (root.isVertical) {
+                return timeStr + "\n" + dayName + " " + day;
+            } else {
+                return dayName + ", " + monthName + " " + day + " - " + timeStr + " " + ampm;
+            }
         }
         color: clockArea.containsMouse ? Theme.accent : Theme.fg
         font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSize
+        font.pixelSize: root.isVertical ? 10 : Theme.fontSize
 
         Behavior on color {
             ColorAnimation { duration: 150 }

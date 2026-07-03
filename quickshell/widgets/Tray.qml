@@ -7,8 +7,11 @@ import "root:/theme"
 
 Item {
     id: root
-    width: toggleBtn.width
-    height: toggleBtn.height
+
+    property bool isVertical: Theme.barPosition === "left" || Theme.barPosition === "right"
+
+    width: 20
+    height: isVertical ? 20 : 24
 
     property bool menuOpen: false
 
@@ -17,6 +20,8 @@ Item {
         width: 20
         height: 20
         radius: 6
+        anchors.verticalCenter: root.isVertical ? undefined : parent.verticalCenter
+        anchors.horizontalCenter: root.isVertical ? parent.horizontalCenter : undefined
         color: chevronArea.containsMouse ? Theme.bgAlt : "transparent"
 
         Behavior on color {
@@ -54,8 +59,8 @@ Item {
         property bool contextMenuOpen: false
 
         anchor.item: toggleBtn
-        anchor.edges: Edges.Top
-        anchor.gravity: Edges.Top
+        anchor.edges: Theme.popupAnchorEdge
+        anchor.gravity: Theme.popupAnchorGravity
 
         implicitWidth: Math.max(trayColumn.implicitWidth, contextMenuOpen ? ctxList.implicitWidth : 0) + 24
         implicitHeight: trayColumn.implicitHeight + 16 + gap + (contextMenuOpen ? ctxList.implicitHeight + 16 : 0)

@@ -6,9 +6,13 @@ import Quickshell.Services.Pipewire
 import Quickshell.Services.UPower
 import "root:/theme"
 
-Row {
+Grid {
     id: root
+    
+    property bool isVertical: Theme.barPosition === "left" || Theme.barPosition === "right"
+    
     spacing: 6
+    columns: isVertical ? 1 : 99
 
     // Track default audio sink
     PwObjectTracker {
@@ -178,8 +182,8 @@ Row {
 
             property int gap: 20
             anchor.item: volumeButton
-            anchor.edges: Edges.Top
-            anchor.gravity: Edges.Top
+            anchor.edges: Theme.popupAnchorEdge
+            anchor.gravity: Theme.popupAnchorGravity
 
             implicitWidth: 220
             implicitHeight: volumeCard.implicitHeight + gap
@@ -480,8 +484,8 @@ Row {
 
             property int gap: 20
             anchor.item: networkButton
-            anchor.edges: Edges.Top
-            anchor.gravity: Edges.Top
+            anchor.edges: Theme.popupAnchorEdge
+            anchor.gravity: Theme.popupAnchorGravity
 
             implicitWidth: 240
             implicitHeight: networkCard.implicitHeight + gap
@@ -727,8 +731,8 @@ Row {
 
             property int gap: 20
             anchor.item: batteryButton
-            anchor.edges: Edges.Top
-            anchor.gravity: Edges.Top
+            anchor.edges: Theme.popupAnchorEdge
+            anchor.gravity: Theme.popupAnchorGravity
 
             implicitWidth: 200
             implicitHeight: 94 + gap

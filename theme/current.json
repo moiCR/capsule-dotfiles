@@ -1,13 +1,14 @@
 {
   "mode": "dark",
-  "bg": "#1e1e2e",
-  "bgAlt": "#11111b",
-  "surface": "#313244",
-  "fg": "#cdd6f4",
-  "fgMuted": "#a6adc8",
-  "accent": "#cba6f7",
-  "red": "#f38ba8",
-  "green": "#a6e3a1",
+  "bg": "#000000",
+  "bgAlt": "#0a0a0a",
+  "surface": "#1a1a1a",
+  "fg": "#ffffff",
+  "fgMuted": "#8c8c8c",
+  "accent": "#3abff8",
+  "red": "#ff5555",
+  "green": "#50fa7b",
   "lang": "es",
-  "theme": "catppuccin"
+  "theme": "oled",
+  "wallpaper": "/home/moi/Im\u00e1genes/Wallpapers/rei-ayanami-3840x2160-27200.jpg"
 }

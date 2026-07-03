@@ -77,5 +77,20 @@
     "S"
   ],
   "wallpaper": "Wallpaper",
-  "wallpaper_desc": "Select an image from "
+  "wallpaper_desc": "Select an image from ",
+  "notifications": "Notifications",
+  "clear_all": "Clear all",
+  "no_notifications": "No notifications",
+  "bar_position": "Bar Position",
+  "pos_top": "Top",
+  "pos_bottom": "Bottom",
+  "pos_left": "Left",
+  "pos_right": "Right",
+  "no_media": "No media playing",
+  "silence": "Silence",
+  "auth_required": "Authentication Required",
+  "cancel": "Cancel",
+  "authenticate": "Authenticate",
+  "system": "System",
+  "no_apps": "No apps"
 }

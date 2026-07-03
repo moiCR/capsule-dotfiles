@@ -2,7 +2,7 @@
 import Quickshell
 import QtQuick
 import Quickshell.Io
-import "./panels/bar"
+import "./panels/dock"
 import "./panels/launcher"
 import "./panels/wifi"
 import "./panels/settings"
@@ -10,23 +10,11 @@ import "./widgets"
 
 ShellRoot {
     id: shell
-    Bar {
-        id: bar
-        contentLeft: [
-            Workspaces {},
-            ActiveWindow {}
-        ]
-        contentCenter: [
-            Clock {}
-        ]
-        contentRight: [
-            AudioVisualizer {},
-            Tray {},
-            System {
-                wifiPrompt: wifiPrompt
-                settingsWindow: settingsWindow
-            }
-        ]
+
+    Dock {
+        id: dock
+        wifiPrompt: wifiPrompt
+        settingsWindow: settingsWindow
     }
 
     Launcher {
@@ -42,10 +30,29 @@ ShellRoot {
         wifiPrompt: wifiPrompt
     }
 
+    Toaster {
+        id: toaster
+    }
+
     IpcHandler {
         target: "launcher"
         function toggle(): void {
             launcher.visible = !launcher.visible;
+        }
+    }
+
+    IpcHandler {
+        target: "dock"
+
+        function setMode(mode: string): void {
+            dock.currentMode = mode;
+        }
+
+        function cycleMode(): void {
+            const modes = ["default", "workspaces", "system", "notifications", "tray", "launcher", "theme", "wallpaper", "language"];
+            let idx = modes.indexOf(dock.currentMode);
+            let nextIdx = (idx + 1) % modes.length;
+            dock.currentMode = modes[nextIdx];
         }
     }
 }

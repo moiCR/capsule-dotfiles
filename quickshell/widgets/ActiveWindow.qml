@@ -2,16 +2,18 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
+import Quickshell.Io
 import "root:/theme"
 
 Item {
     id: root
 
-    implicitWidth: Math.min(textItem.implicitWidth, 200)
+    property bool isVertical: Theme.barPosition === "left" || Theme.barPosition === "right"
+
+    implicitWidth: isVertical ? 24 : Math.min(textItem.implicitWidth + 20, 200)
     implicitHeight: 24
     width: implicitWidth
     height: implicitHeight
-    anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
     Behavior on width {
         NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
@@ -26,32 +28,46 @@ Item {
         }
     }
 
-    Text {
-        id: textItem
-        anchors.verticalCenter: parent.verticalCenter
-        width: parent.width
-        height: parent.height
-        verticalAlignment: Text.AlignVCenter
-        text: Hyprland.activeToplevel ? Hyprland.activeToplevel.title : (Theme.t.desktop ?? "Desktop")
-        color: clickArea.containsMouse && clickArea.enabled ? Theme.accent : Theme.fg
-        font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSize
-
-        elide: Text.ElideRight
-        clip: true
-
-        Behavior on color {
-            ColorAnimation { duration: 150 }
-        }
-    }
-
-    MouseArea {
-        id: clickArea
+    // Black Box Container (matching AudioVisualizer style)
+    Rectangle {
+        id: winBox
         anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-        enabled: Hyprland.activeToplevel !== null
-        onClicked: root.menuOpen = !root.menuOpen
+        radius: 8
+        color: "#000000"
+        border.color: clickArea.containsMouse && clickArea.enabled 
+            ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.5) 
+            : Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.25)
+        border.width: 1
+
+        Behavior on border.color { ColorAnimation { duration: 150 } }
+
+        Text {
+            id: textItem
+            anchors.fill: parent
+            anchors.leftMargin: root.isVertical ? 0 : 10
+            anchors.rightMargin: root.isVertical ? 0 : 10
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            text: root.isVertical
+                ? "\uf2d0"
+                : (Hyprland.activeToplevel ? Hyprland.activeToplevel.title : (Theme.t.desktop ?? "Desktop"))
+            color: clickArea.containsMouse && clickArea.enabled ? Theme.accent : Theme.fg
+            font.family: Theme.fontFamily
+            font.pixelSize: root.isVertical ? 13 : Theme.fontSize
+            elide: Text.ElideRight
+            clip: true
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+        }
+
+        MouseArea {
+            id: clickArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+            enabled: Hyprland.activeToplevel !== null
+            onClicked: root.menuOpen = !root.menuOpen
+        }
     }
 
     PopupWindow {
@@ -60,8 +76,8 @@ Item {
 
         property int gap: 20
         anchor.item: root
-        anchor.edges: Edges.Top
-        anchor.gravity: Edges.Top
+        anchor.edges: Theme.popupAnchorEdge
+        anchor.gravity: Theme.popupAnchorGravity
 
         implicitWidth: 280
         implicitHeight: 226 + gap
@@ -195,8 +211,9 @@ Item {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            if (root.targetToplevel) {
-                                root.targetToplevel.close();
+                            if (root.targetToplevel && root.targetToplevel.address) {
+                                closeWinProcess.command = ["hyprctl", "quiet", "dispatch", "hl.dsp.window.close({ window = 'address:0x" + root.targetToplevel.address + "' })"];
+                                closeWinProcess.running = true;
                             }
                             root.menuOpen = false;
                         }
@@ -219,5 +236,9 @@ Item {
                 activeWinPopup.visible = false;
             }
         }
+    }
+
+    Process {
+        id: closeWinProcess
     }
 }

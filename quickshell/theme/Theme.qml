@@ -10,7 +10,16 @@ QtObject {
     property string currentTheme: "dark"
     property string currentWallpaper: ""
     property string currentLang: "es"
+    property string barPosition: "bottom"
     property var t: ({})
+
+    property int popupAnchorEdge: {
+        if (barPosition === "top") return Edges.Bottom;
+        if (barPosition === "left") return Edges.Right;
+        if (barPosition === "right") return Edges.Left;
+        return Edges.Top;
+    }
+    property int popupAnchorGravity: popupAnchorEdge
 
     property FileView langFile: FileView {
         path: Quickshell.env("HOME") + "/pro/dotfiles/lang/" + theme.currentLang + ".json"
@@ -32,7 +41,7 @@ QtObject {
 
     property string fontFamily: "JetBrains Mono Nerd Font"
     property int fontSize: 12
-    property int radius: 8
+    property int radius: 42
     property int spacing: 8
 
     property FileView _file: FileView {
@@ -45,6 +54,7 @@ QtObject {
             theme.currentTheme = d.theme ?? (d.mode ?? "dark");
             theme.currentWallpaper = d.wallpaper ?? "";
             theme.currentLang = d.lang ?? theme.currentLang;
+            theme.barPosition = d.barPosition ?? "bottom";
             theme.bg = d.bg ?? theme.bg;
             theme.bgAlt = d.bgAlt ?? theme.bgAlt;
             theme.surface = d.surface ?? theme.surface;

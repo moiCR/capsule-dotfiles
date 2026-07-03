@@ -36,7 +36,6 @@ PanelWindow {
     property var wallpapersList: []
     property string wallpaperDir: { let home = Quickshell.env("HOME"); return Theme.currentLang === "es" ? home + "/Imágenes/Wallpapers" : home + "/Pictures/Wallpapers"; }
 
-    // Dynamic Language properties
     property var languagesList: []
     property bool showAddLang: false
     property string newLangCode: ""
@@ -647,6 +646,80 @@ PanelWindow {
                                         onClicked: {
                                             themeToggleProcess.command = [Quickshell.env("HOME") + "/pro/dotfiles/theme/apply-theme.sh", modelData.id];
                                             themeToggleProcess.running = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Separator line
+                        Rectangle {
+                            width: parent.width
+                            height: 1
+                            color: Qt.rgba(Theme.bgAlt.r, Theme.bgAlt.g, Theme.bgAlt.b, 0.4)
+                        }
+
+                        // Bar position title
+                        Text {
+                            text: Theme.t.bar_position ?? "Posición de la barra"
+                            color: Theme.fg
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 14
+                            font.bold: true
+                        }
+
+                        // Bar position buttons flow
+                        Flow {
+                            width: parent.width
+                            spacing: 12
+
+                            Repeater {
+                                model: [
+                                    { "id": "bottom", "name": Theme.t.pos_bottom ?? "Abajo", "icon": "⬇" },
+                                    { "id": "top", "name": Theme.t.pos_top ?? "Arriba", "icon": "⬆" },
+                                    { "id": "left", "name": Theme.t.pos_left ?? "Izquierda", "icon": "⬅" },
+                                    { "id": "right", "name": Theme.t.pos_right ?? "Derecha", "icon": "➡" }
+                                ]
+
+                                delegate: Rectangle {
+                                    width: (parent.width - 36) / 4
+                                    height: 50
+                                    radius: 10
+                                    color: (Theme.barPosition === modelData.id) ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.15) : Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.25)
+                                    border.color: (Theme.barPosition === modelData.id) ? Theme.accent : (posMouse.containsMouse ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.4) : Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.2))
+                                    border.width: (Theme.barPosition === modelData.id) ? 2 : 1
+
+                                    required property var modelData
+
+                                    Row {
+                                        anchors.centerIn: parent
+                                        spacing: 8
+                                        
+                                        Text {
+                                            text: modelData.icon
+                                            color: (Theme.barPosition === modelData.id) ? Theme.accent : Theme.fgMuted
+                                            font.family: Theme.fontFamily
+                                            font.pixelSize: 12
+                                        }
+
+                                        Text {
+                                            text: modelData.name
+                                            color: (Theme.barPosition === modelData.id) ? Theme.accent : Theme.fg
+                                            font.family: Theme.fontFamily
+                                            font.pixelSize: 11
+                                            font.bold: (Theme.barPosition === modelData.id)
+                                        }
+                                    }
+
+                                    MouseArea {
+                                        id: posMouse
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            let jsonPath = Quickshell.env("HOME") + "/pro/dotfiles/theme/current.json";
+                                            setBarPosProcess.command = ["python3", "-c", "import json; d = json.load(open('" + jsonPath + "')); d['barPosition'] = '" + modelData.id + "'; json.dump(d, open('" + jsonPath + "', 'w'), indent=2)"];
+                                            setBarPosProcess.running = true;
                                         }
                                     }
                                 }
@@ -1452,5 +1525,9 @@ PanelWindow {
 
     Process {
         id: setWallpaperProcess
+    }
+
+    Process {
+        id: setBarPosProcess
     }
 }

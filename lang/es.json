@@ -77,5 +77,20 @@
     "D"
   ],
   "wallpaper": "Fondo de Pantalla",
-  "wallpaper_desc": "Selecciona una imagen de "
+  "wallpaper_desc": "Selecciona una imagen de ",
+  "notifications": "Notificaciones",
+  "clear_all": "Limpiar todo",
+  "no_notifications": "Sin notificaciones",
+  "bar_position": "Posición de la barra",
+  "pos_top": "Arriba",
+  "pos_bottom": "Abajo",
+  "pos_left": "Izquierda",
+  "pos_right": "Derecha",
+  "no_media": "No reproduciendo",
+  "silence": "Silencio",
+  "auth_required": "Autenticación Requerida",
+  "cancel": "Cancelar",
+  "authenticate": "Autenticar",
+  "system": "Sistema",
+  "no_apps": "Sin aplicaciones"
 }

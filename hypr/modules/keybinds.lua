@@ -2,6 +2,7 @@ local programs = require("modules/programs")
 
 local mainMod = "SUPER"
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("~/pro/dotfiles/theme/apply-theme.sh"))
+hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("ghostty -e btop"))
 
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(programs.terminal))
 hl.bind(mainMod .. "+ SHIFT + RETURN", hl.dsp.exec_cmd("ghostty --class=com.domain.dropdown"))
@@ -14,7 +15,7 @@ local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 -- hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(programs.fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + SUPER_L", hl.dsp.exec_cmd(programs.menu), { release = true })
+hl.bind(mainMod .. " + SUPER_L", hl.dsp.exec_cmd("quickshell ipc call dock setMode launcher"), { release = true })
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
 
@@ -54,3 +55,18 @@ hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+
+hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("spotify"))
+
+-- Dynamic Dock Mode Controls (Quickshell IPC)
+hl.bind(mainMod .. " + ALT + D", hl.dsp.exec_cmd("quickshell ipc call dock cycleMode"))
+hl.bind(mainMod .. " + ALT + 1", hl.dsp.exec_cmd("quickshell ipc call dock setMode default"))
+hl.bind(mainMod .. " + ALT + 2", hl.dsp.exec_cmd("quickshell ipc call dock setMode workspaces"))
+hl.bind(mainMod .. " + ALT + 3", hl.dsp.exec_cmd("quickshell ipc call dock setMode system"))
+hl.bind(mainMod .. " + ALT + 4", hl.dsp.exec_cmd("quickshell ipc call dock setMode notifications"))
+hl.bind(mainMod .. " + ALT + 5", hl.dsp.exec_cmd("quickshell ipc call dock setMode tray"))
+hl.bind(mainMod .. " + ALT + 6", hl.dsp.exec_cmd("quickshell ipc call dock setMode launcher"))
+hl.bind(mainMod .. " + ALT + 7", hl.dsp.exec_cmd("quickshell ipc call dock setMode theme"))
+hl.bind(mainMod .. " + ALT + 8", hl.dsp.exec_cmd("quickshell ipc call dock setMode wallpaper"))
+hl.bind(mainMod .. " + ALT + 9", hl.dsp.exec_cmd("quickshell ipc call dock setMode language"))
+

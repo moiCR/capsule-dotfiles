@@ -53,8 +53,8 @@ Item {
         property bool contextMenuOpen: false
 
         anchor.item: toggleBtn
-        anchor.edges: Edges.Top
-        anchor.gravity: Edges.Top
+        anchor.edges: Theme.popupAnchorEdge
+        anchor.gravity: Theme.popupAnchorGravity
 
         implicitWidth: Math.max(trayColumn.implicitWidth, contextMenuOpen ? ctxList.implicitWidth : 0) + 24
         implicitHeight: trayColumn.implicitHeight + 16 + gap + (contextMenuOpen ? ctxList.implicitHeight + 16 : 0)
