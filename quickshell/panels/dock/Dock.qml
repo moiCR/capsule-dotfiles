@@ -41,12 +41,34 @@ PanelWindow {
         }
     }
 
+    Timer {
+        id: autoRevertTimer
+        interval: 5000
+        repeat: false
+        onTriggered: {
+            if (dock.currentMode !== "default") {
+                dock.currentMode = "default";
+            }
+        }
+    }
+
     onCurrentModeChanged: {
         isDefaultHovered = false;
         if (currentMode === "notifications") {
             dockNotificationTimer.restart();
         } else {
             dockNotificationTimer.stop();
+        }
+
+        // Auto-revert timer management on mode change
+        if (currentMode !== "default") {
+            if (!dockHoverHandler.hovered) {
+                autoRevertTimer.restart();
+            } else {
+                autoRevertTimer.stop();
+            }
+        } else {
+            autoRevertTimer.stop();
         }
     }
 
@@ -160,11 +182,16 @@ PanelWindow {
 
         state: dock.currentMode
 
-        focus: true
-        Keys.onEscapePressed: {
-            if (dock.currentMode !== "default") {
-                dock.currentMode = "default";
+        Keys.onPressed: (event) => {
+            autoRevertTimer.restart();
+            if (event.key === Qt.Key_Escape) {
+                if (dock.currentMode !== "default") {
+                    dock.currentMode = "default";
+                    event.accepted = true;
+                    return;
+                }
             }
+            event.accepted = false;
         }
 
         HoverHandler {
@@ -176,6 +203,12 @@ PanelWindow {
                         dock.isDefaultHovered = true;
                     } else {
                         dockBgHoverTimer.restart();
+                    }
+                } else {
+                    if (hovered) {
+                        autoRevertTimer.stop();
+                    } else {
+                        autoRevertTimer.restart();
                     }
                 }
             }
