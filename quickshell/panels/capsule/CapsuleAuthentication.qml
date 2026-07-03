@@ -6,7 +6,7 @@ import "root:/theme"
 Item {
     id: authWrapper
 
-    readonly property var flow: dock.polkitAgent ? dock.polkitAgent.flow : null
+    readonly property var flow: capsule.polkitAgent ? capsule.polkitAgent.flow : null
 
     implicitWidth: 488
     implicitHeight: mainColumn.implicitHeight + pad * 2
@@ -32,12 +32,12 @@ Item {
         function onIsCompletedChanged() {
             if (flow && flow.isCompleted) {
                 // If successful or fully resolved, go back to default
-                dock.currentMode = "default";
+                capsule.currentMode = "default";
             }
         }
         function onIsCancelledChanged() {
             if (flow && flow.isCancelled) {
-                dock.currentMode = "default";
+                capsule.currentMode = "default";
             }
         }
     }
@@ -163,7 +163,7 @@ Item {
                     if (flow) {
                         flow.cancelAuthenticationRequest();
                     } else {
-                        dock.currentMode = "default";
+                        capsule.currentMode = "default";
                     }
                 }
             }

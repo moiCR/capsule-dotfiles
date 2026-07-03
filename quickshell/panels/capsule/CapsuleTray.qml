@@ -10,13 +10,13 @@ Item {
     property int compactWidth: Math.max(30, trayRow.implicitWidth)
     property int menuContentHeight: 20 + 10 + 1 + 4 + menuItemsColumn.implicitHeight
 
-    implicitWidth: dock.currentMode === "tray_expanded" ? 260 : compactWidth
-    implicitHeight: dock.currentMode === "tray_expanded" ? menuContentHeight : 20
+    implicitWidth: capsule.currentMode === "tray_expanded" ? 260 : compactWidth
+    implicitHeight: capsule.currentMode === "tray_expanded" ? menuContentHeight : 20
 
-    focus: dock.currentMode === "tray_expanded"
+    focus: capsule.currentMode === "tray_expanded"
     onFocusChanged: { if (focus) trayWrapper.forceActiveFocus() }
 
-    Keys.onEscapePressed: dock.currentMode = "tray"
+    Keys.onEscapePressed: capsule.currentMode = "tray"
 
     MouseArea {
         id: trayMouseArea
@@ -31,8 +31,8 @@ Item {
     Timer {
         interval: 5000
         repeat: false
-        running: dock.currentMode === "tray_expanded" && !trayMouseArea.containsMouse
-        onTriggered: dock.currentMode = "tray"
+        running: capsule.currentMode === "tray_expanded" && !trayMouseArea.containsMouse
+        onTriggered: capsule.currentMode = "tray"
     }
 
     Column {
@@ -59,7 +59,7 @@ Item {
                     Rectangle {
                         anchors.fill: parent
                         radius: 4
-                        color: (iconMouse.containsMouse || (dock.currentMode === "tray_expanded" && ctxOpener.menu === trayIconItem.modelData.menu))
+                        color: (iconMouse.containsMouse || (capsule.currentMode === "tray_expanded" && ctxOpener.menu === trayIconItem.modelData.menu))
                             ? Theme.bgAlt : "transparent"
                     }
 
@@ -79,15 +79,15 @@ Item {
                         cursorShape: Qt.PointingHandCursor
                         onClicked: mouse => {
                             if (trayIconItem.modelData.hasMenu) {
-                                if (dock.currentMode === "tray_expanded" && ctxOpener.menu === trayIconItem.modelData.menu) {
-                                    dock.currentMode = "tray";
+                                if (capsule.currentMode === "tray_expanded" && ctxOpener.menu === trayIconItem.modelData.menu) {
+                                    capsule.currentMode = "tray";
                                 } else {
                                     ctxOpener.menu = trayIconItem.modelData.menu;
-                                    dock.currentMode = "tray_expanded";
+                                    capsule.currentMode = "tray_expanded";
                                 }
                             } else {
                                 trayIconItem.modelData.activate();
-                                dock.currentMode = "tray";
+                                capsule.currentMode = "tray";
                             }
                         }
                     }
@@ -110,7 +110,7 @@ Item {
             id: menuList
             width: parent.width
             spacing: 4
-            opacity: dock.currentMode === "tray_expanded" ? 1 : 0
+            opacity: capsule.currentMode === "tray_expanded" ? 1 : 0
             visible: opacity > 0
 
             Behavior on opacity {
@@ -174,7 +174,7 @@ Item {
                             enabled: entryDelegate.modelData.enabled !== false
                             onClicked: {
                                 entryDelegate.modelData.triggered();
-                                dock.currentMode = "tray";
+                                capsule.currentMode = "tray";
                             }
                         }
                     }

@@ -18,7 +18,7 @@ Item {
         wallpaperWrapper.forceActiveFocus();
         listWallpapersProcess.running = true;
     }
-    Keys.onEscapePressed: dock.currentMode = "default"
+    Keys.onEscapePressed: capsule.currentMode = "default"
 
     readonly property string wallpaperDir: {
         let home = Quickshell.env("HOME");
@@ -92,7 +92,7 @@ Item {
                     anchors.margins: -6
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: dock.currentMode = "default"
+                    onClicked: capsule.currentMode = "default"
                 }
             }
         }

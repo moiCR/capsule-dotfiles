@@ -10,7 +10,7 @@ Item {
     id: defaultRoot
 
     // Hover state managed by parent Dock Window
-    readonly property bool isHovered: dock.isDefaultHovered
+    readonly property bool isHovered: capsule.isDefaultHovered
 
     implicitWidth: mainRow.implicitWidth
     implicitHeight: mainRow.implicitHeight

@@ -35,7 +35,7 @@ Item {
             if (filteredApps.values.length === 0) return;
             const entry = filteredApps.values[appsList.currentIndex];
             entry.execute();
-            dock.currentMode = "default";
+            capsule.currentMode = "default";
         }
 
         Row {
@@ -63,7 +63,7 @@ Item {
 
                 background: Rectangle { color: "transparent" }
 
-                Keys.onEscapePressed: dock.currentMode = "default"
+                Keys.onEscapePressed: capsule.currentMode = "default"
                 Keys.onReturnPressed: launcherRoot.launchSelected()
                 Keys.onDownPressed: appsList.currentIndex = Math.min(appsList.currentIndex + 1, filteredApps.values.length - 1)
                 Keys.onUpPressed: appsList.currentIndex = Math.max(appsList.currentIndex - 1, 0)

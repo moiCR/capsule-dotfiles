@@ -5,8 +5,8 @@ Item {
     id: notifRoot
 
     // Use active notification if available, otherwise fallback to the latest in history
-    readonly property var activeNotif: dock.activeNotification !== null 
-        ? dock.activeNotification 
+    readonly property var activeNotif: capsule.activeNotification !== null 
+        ? capsule.activeNotification 
         : ((toaster && toaster.historyModel && toaster.historyModel.count > 0) ? toaster.historyModel.get(0) : null)
 
     implicitWidth: 420

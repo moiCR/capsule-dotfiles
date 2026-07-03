@@ -18,7 +18,7 @@ Item {
         langWrapper.forceActiveFocus();
         listLangsProcess.running = true;
     }
-    Keys.onEscapePressed: dock.currentMode = "default"
+    Keys.onEscapePressed: capsule.currentMode = "default"
 
     property var langsList: []
 
@@ -87,7 +87,7 @@ Item {
                     anchors.margins: -6
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: dock.currentMode = "default"
+                    onClicked: capsule.currentMode = "default"
                 }
             }
         }

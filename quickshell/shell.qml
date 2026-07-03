@@ -2,7 +2,7 @@
 import Quickshell
 import QtQuick
 import Quickshell.Io
-import "./panels/dock"
+import "./panels/capsule"
 import "./panels/launcher"
 import "./panels/wifi"
 import "./panels/settings"
@@ -11,8 +11,8 @@ import "./widgets"
 ShellRoot {
     id: shell
 
-    Dock {
-        id: dock
+    Capsule {
+        id: capsule
         wifiPrompt: wifiPrompt
         settingsWindow: settingsWindow
     }
@@ -42,17 +42,17 @@ ShellRoot {
     }
 
     IpcHandler {
-        target: "dock"
+        target: "capsule"
 
         function setMode(mode: string): void {
-            dock.currentMode = mode;
+            capsule.currentMode = mode;
         }
 
         function cycleMode(): void {
             const modes = ["default", "workspaces", "system", "notifications", "tray", "launcher", "theme", "wallpaper", "language"];
-            let idx = modes.indexOf(dock.currentMode);
+            let idx = modes.indexOf(capsule.currentMode);
             let nextIdx = (idx + 1) % modes.length;
-            dock.currentMode = modes[nextIdx];
+            capsule.currentMode = modes[nextIdx];
         }
     }
 }

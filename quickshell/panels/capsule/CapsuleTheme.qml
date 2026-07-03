@@ -15,7 +15,7 @@ Item {
 
     focus: true
     Component.onCompleted: themeWrapper.forceActiveFocus()
-    Keys.onEscapePressed: dock.currentMode = "default"
+    Keys.onEscapePressed: capsule.currentMode = "default"
 
     readonly property var themes: [
         { "id": "dark",          "name": "dark",         "bg": "#242424", "accent": "#89b4fa" },
@@ -87,7 +87,7 @@ Item {
                     anchors.margins: -6
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: dock.currentMode = "default"
+                    onClicked: capsule.currentMode = "default"
                 }
             }
         }

@@ -12,7 +12,7 @@ import "root:/theme"
 import "../../widgets"
 
 PanelWindow {
-    id: dock
+    id: capsule
     color: "transparent"
 
     property var wifiPrompt: null
@@ -25,18 +25,18 @@ PanelWindow {
     PolkitAgent {
         id: polkitAgent
         onAuthenticationRequestStarted: {
-            dock.currentMode = "authentication";
+            capsule.currentMode = "authentication";
         }
     }
 
     Timer {
-        id: dockNotificationTimer
+        id: capsuleNotificationTimer
         interval: 5000
         repeat: false
         onTriggered: {
-            if (dock.currentMode === "notifications") {
-                dock.currentMode = "default";
-                dock.activeNotification = null;
+            if (capsule.currentMode === "notifications") {
+                capsule.currentMode = "default";
+                capsule.activeNotification = null;
             }
         }
     }
@@ -46,8 +46,8 @@ PanelWindow {
         interval: 5000
         repeat: false
         onTriggered: {
-            if (dock.currentMode !== "default") {
-                dock.currentMode = "default";
+            if (capsule.currentMode !== "default") {
+                capsule.currentMode = "default";
             }
         }
     }
@@ -55,14 +55,14 @@ PanelWindow {
     onCurrentModeChanged: {
         isDefaultHovered = false;
         if (currentMode === "notifications") {
-            dockNotificationTimer.restart();
+            capsuleNotificationTimer.restart();
         } else {
-            dockNotificationTimer.stop();
+            capsuleNotificationTimer.stop();
         }
 
         // Auto-revert timer management on mode change
         if (currentMode !== "default") {
-            if (!dockHoverHandler.hovered) {
+            if (!capsuleHoverHandler.hovered) {
                 autoRevertTimer.restart();
             } else {
                 autoRevertTimer.stop();
@@ -85,7 +85,7 @@ PanelWindow {
     property int windowHeight: 48
     implicitHeight: windowHeight
 
-    property int targetWindowHeight: dockBg.height + 12
+    property int targetWindowHeight: capsuleBg.height + 12
     onTargetWindowHeightChanged: {
         if (targetWindowHeight > windowHeight) {
             shrinkTimer.stop();
@@ -101,7 +101,7 @@ PanelWindow {
         property int targetHeight: 48
         interval: 300
         repeat: false
-        onTriggered: dock.windowHeight = targetHeight
+        onTriggered: capsule.windowHeight = targetHeight
     }
 
     SystemClock {
@@ -126,8 +126,8 @@ PanelWindow {
         interval: 3000
         repeat: false
         onTriggered: {
-            if (dock.currentMode === "volume")
-                dock.currentMode = "default";
+            if (capsule.currentMode === "volume")
+                capsule.currentMode = "default";
         }
     }
 
@@ -165,13 +165,13 @@ PanelWindow {
         interval: 2500
         repeat: false
         onTriggered: {
-            if (dock.currentMode === "workspaces")
-                dock.currentMode = "default";
+            if (capsule.currentMode === "workspaces")
+                capsule.currentMode = "default";
         }
     }
 
     Rectangle {
-        id: dockBg
+        id: capsuleBg
 
         anchors.top: parent.top
         anchors.topMargin: 6
@@ -180,13 +180,13 @@ PanelWindow {
         color: Theme.bg
         clip: true
 
-        state: dock.currentMode
+        state: capsule.currentMode
 
         Keys.onPressed: (event) => {
             autoRevertTimer.restart();
             if (event.key === Qt.Key_Escape) {
-                if (dock.currentMode !== "default") {
-                    dock.currentMode = "default";
+                if (capsule.currentMode !== "default") {
+                    capsule.currentMode = "default";
                     event.accepted = true;
                     return;
                 }
@@ -195,14 +195,14 @@ PanelWindow {
         }
 
         HoverHandler {
-            id: dockHoverHandler
+            id: capsuleHoverHandler
             onHoveredChanged: {
-                if (dock.currentMode === "default") {
+                if (capsule.currentMode === "default") {
                     if (hovered) {
-                        dockBgHoverTimer.stop();
-                        dock.isDefaultHovered = true;
+                        capsuleBgHoverTimer.stop();
+                        capsule.isDefaultHovered = true;
                     } else {
-                        dockBgHoverTimer.restart();
+                        capsuleBgHoverTimer.restart();
                     }
                 } else {
                     if (hovered) {
@@ -215,26 +215,26 @@ PanelWindow {
         }
 
         Timer {
-            id: dockBgHoverTimer
+            id: capsuleBgHoverTimer
             interval: 350
             repeat: false
-            onTriggered: dock.isDefaultHovered = false;
+            onTriggered: capsule.isDefaultHovered = false;
         }
 
         states: [
             State {
                 name: "default"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: loader.item ? loader.item.implicitWidth + 72 : 197
                     height: loader.item ? loader.item.implicitHeight + 16 : 36
-                    radius: dock.isDefaultHovered ? 20 : 18
+                    radius: capsule.isDefaultHovered ? 20 : 18
                 }
             },
             State {
                 name: "volume"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: 290
                     height: 36
                     radius: 18
@@ -243,7 +243,7 @@ PanelWindow {
             State {
                 name: "workspaces"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: loader.item ? loader.item.implicitWidth + 48 : 200
                     height: 36
                     radius: 18
@@ -252,7 +252,7 @@ PanelWindow {
             State {
                 name: "notifications"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: loader.item ? loader.item.implicitWidth : 420
                     height: loader.item ? loader.item.implicitHeight : 44
                     radius: 24
@@ -261,7 +261,7 @@ PanelWindow {
             State {
                 name: "tray"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: loader.item ? loader.item.compactWidth + 32 : 100
                     height: 36
                     radius: 18
@@ -270,7 +270,7 @@ PanelWindow {
             State {
                 name: "tray_expanded"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: 280
                     height: loader.item ? loader.item.menuContentHeight + 16 : 180
                     radius: 20
@@ -279,7 +279,7 @@ PanelWindow {
             State {
                 name: "launcher"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: 524
                     height: 440
                     radius: 24
@@ -288,7 +288,7 @@ PanelWindow {
             State {
                 name: "theme"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: 420
                     height: 310
                     radius: 20
@@ -297,7 +297,7 @@ PanelWindow {
             State {
                 name: "wallpaper"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: 420
                     height: 310
                     radius: 20
@@ -306,7 +306,7 @@ PanelWindow {
             State {
                 name: "language"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: 420
                     height: 310
                     radius: 20
@@ -315,7 +315,7 @@ PanelWindow {
             State {
                 name: "authentication"
                 PropertyChanges {
-                    target: dockBg
+                    target: capsuleBg
                     width: 520
                     height: loader.item ? loader.item.implicitHeight : 190
                     radius: 24
@@ -348,17 +348,17 @@ PanelWindow {
             id: loader
             anchors.top: parent.top
             anchors.topMargin: {
-                if (dock.currentMode === "tray" || dock.currentMode === "tray_expanded")
+                if (capsule.currentMode === "tray" || capsule.currentMode === "tray_expanded")
                     return 8;
-                if (dock.currentMode === "theme" || dock.currentMode === "wallpaper" || dock.currentMode === "language")
+                if (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language")
                     return 16;
                 return 0;
             }
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: (dock.currentMode === "tray" || dock.currentMode === "tray_expanded" || dock.currentMode === "theme" || dock.currentMode === "wallpaper" || dock.currentMode === "language") ? undefined : parent.verticalCenter
+            anchors.verticalCenter: (capsule.currentMode === "tray" || capsule.currentMode === "tray_expanded" || capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language") ? undefined : parent.verticalCenter
 
             sourceComponent: {
-                switch (dock.currentMode) {
+                switch (capsule.currentMode) {
                 case "volume":
                     return volumeComp;
                 case "workspaces":
@@ -387,39 +387,39 @@ PanelWindow {
 
     Component {
         id: defaultComp
-        DockDefault {}
+        CapsuleDefault {}
     }
     Component {
         id: volumeComp
-        DockVolume {}
+        CapsuleVolume {}
     }
     Component {
         id: notificationsComp
-        DockNotifications {}
+        CapsuleNotifications {}
     }
     Component {
         id: trayComp
-        DockTray {}
+        CapsuleTray {}
     }
     Component {
         id: launcherComp
-        DockLauncher {}
+        CapsuleLauncher {}
     }
     Component {
         id: themeComp
-        DockTheme {}
+        CapsuleTheme {}
     }
     Component {
         id: wallpaperComp
-        DockWallpaper {}
+        CapsuleWallpaper {}
     }
     Component {
         id: languageComp
-        DockLanguage {}
+        CapsuleLanguage {}
     }
     Component {
         id: authenticationComp
-        DockAuthentication {}
+        CapsuleAuthentication {}
     }
 
     Component {

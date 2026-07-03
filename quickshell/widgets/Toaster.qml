@@ -55,9 +55,9 @@ PanelWindow {
             historyModel.insert(0, newObj);
 
             // Forward notification to the dock and switch to notifications mode
-            if (typeof dock !== "undefined") {
-                dock.activeNotification = newObj;
-                dock.currentMode = "notifications";
+            if (typeof capsule !== "undefined") {
+                capsule.activeNotification = newObj;
+                capsule.currentMode = "notifications";
             }
 
             // Automatically close after 5 seconds
