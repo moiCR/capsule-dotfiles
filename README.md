@@ -1,4 +1,5 @@
 <h1 align="center">capsule-dots</h1>
+<p align="center">Version 0.1</p>
 
 <p align="center">
   A premium, dynamic Linux workspace setup inspired by the highly portable and versatile capsules of <b>Capsule Corp</b>. Built for <b>Hyprland</b> and driven by <b>Quickshell</b>.
