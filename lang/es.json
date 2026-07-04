@@ -92,5 +92,9 @@
   "cancel": "Cancelar",
   "authenticate": "Autenticar",
   "system": "Sistema",
-  "no_apps": "Sin aplicaciones"
+  "no_apps": "Sin aplicaciones",
+  "clipboard": "Portapapeles",
+  "clipboard_empty": "Historial de portapapeles vacío",
+  "emoji_picker": "Selector de Emojis",
+  "emoji_search": "Buscar emoji..."
 }

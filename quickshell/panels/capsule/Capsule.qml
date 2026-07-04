@@ -18,7 +18,7 @@ PanelWindow {
     property var wifiPrompt: null
     property var settingsWindow: null
     property string currentMode: "default"
-    property bool isDefaultHovered: false
+
     property var activeNotification: null
     property alias polkitAgent: polkitAgent
 
@@ -53,7 +53,6 @@ PanelWindow {
     }
 
     onCurrentModeChanged: {
-        isDefaultHovered = false;
         if (currentMode === "notifications") {
             capsuleNotificationTimer.restart();
         } else {
@@ -78,9 +77,9 @@ PanelWindow {
         right: true
     }
 
-    WlrLayershell.exclusiveZone: 48
+    WlrLayershell.exclusiveZone: 35
     WlrLayershell.layer: currentMode === "launcher" ? WlrLayer.Overlay : WlrLayer.Top
-    WlrLayershell.keyboardFocus: (currentMode === "launcher" || currentMode === "tray_expanded" || currentMode === "theme" || currentMode === "wallpaper" || currentMode === "language" || currentMode === "authentication") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: (currentMode === "launcher" || currentMode === "tray_expanded" || currentMode === "theme" || currentMode === "wallpaper" || currentMode === "language" || currentMode === "authentication" || currentMode === "clipboard" || currentMode === "emoji") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     property int windowHeight: 48
     implicitHeight: windowHeight
@@ -160,6 +159,24 @@ PanelWindow {
         }
     }
 
+    Connections {
+        target: Hyprland
+        function onActiveToplevelChanged() {
+            let active = Hyprland.activeToplevel;
+            let specName = capsule.activeSpecialName;
+            if (specName.indexOf("dropdown") !== -1) {
+                if (!active || active.class !== "com.domain.dropdown") {
+                    hideDropdownProcess.running = true;
+                }
+            }
+        }
+    }
+
+    Process {
+        id: hideDropdownProcess
+        command: ["hyprctl", "dispatch", "hl.dsp.workspace.toggle_special('dropdown')"]
+    }
+
     Timer {
         id: workspaceOsdTimer
         interval: 2500
@@ -200,9 +217,13 @@ PanelWindow {
                 if (capsule.currentMode === "default") {
                     if (hovered) {
                         capsuleBgHoverTimer.stop();
-                        capsule.isDefaultHovered = true;
-                    } else {
+                        capsule.currentMode = "dashboard";
+                    }
+                } else if (capsule.currentMode === "dashboard") {
+                    if (!hovered) {
                         capsuleBgHoverTimer.restart();
+                    } else {
+                        capsuleBgHoverTimer.stop();
                     }
                 } else {
                     if (hovered) {
@@ -218,7 +239,11 @@ PanelWindow {
             id: capsuleBgHoverTimer
             interval: 350
             repeat: false
-            onTriggered: capsule.isDefaultHovered = false;
+            onTriggered: {
+                if (capsule.currentMode === "dashboard") {
+                    capsule.currentMode = "default";
+                }
+            }
         }
 
         states: [
@@ -228,7 +253,16 @@ PanelWindow {
                     target: capsuleBg
                     width: loader.item ? loader.item.implicitWidth + 72 : 197
                     height: loader.item ? loader.item.implicitHeight + 16 : 36
-                    radius: capsule.isDefaultHovered ? 20 : 18
+                    radius: 18
+                }
+            },
+            State {
+                name: "dashboard"
+                PropertyChanges {
+                    target: capsuleBg
+                    width: 420
+                    height: 310
+                    radius: 20
                 }
             },
             State {
@@ -313,6 +347,24 @@ PanelWindow {
                 }
             },
             State {
+                name: "clipboard"
+                PropertyChanges {
+                    target: capsuleBg
+                    width: 420
+                    height: 310
+                    radius: 20
+                }
+            },
+            State {
+                name: "emoji"
+                PropertyChanges {
+                    target: capsuleBg
+                    width: 420
+                    height: 310
+                    radius: 20
+                }
+            },
+            State {
                 name: "authentication"
                 PropertyChanges {
                     target: capsuleBg
@@ -350,12 +402,12 @@ PanelWindow {
             anchors.topMargin: {
                 if (capsule.currentMode === "tray" || capsule.currentMode === "tray_expanded")
                     return 8;
-                if (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language")
+                if (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard")
                     return 16;
                 return 0;
             }
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: (capsule.currentMode === "tray" || capsule.currentMode === "tray_expanded" || capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language") ? undefined : parent.verticalCenter
+            anchors.verticalCenter: (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard") ? undefined : parent.verticalCenter
 
             sourceComponent: {
                 switch (capsule.currentMode) {
@@ -378,6 +430,12 @@ PanelWindow {
                     return languageComp;
                 case "authentication":
                     return authenticationComp;
+                case "clipboard":
+                    return clipboardComp;
+                case "emoji":
+                    return emojiComp;
+                case "dashboard":
+                    return dashboardComp;
                 default:
                     return defaultComp;
                 }
@@ -423,7 +481,22 @@ PanelWindow {
     }
 
     Component {
+        id: clipboardComp
+        CapsuleClipboard {}
+    }
+
+    Component {
+        id: emojiComp
+        CapsuleEmoji {}
+    }
+
+    Component {
         id: workspacesComp
         Workspaces {}
+    }
+
+    Component {
+        id: dashboardComp
+        CapsuleDashboard {}
     }
 }

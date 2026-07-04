@@ -92,5 +92,9 @@
   "cancel": "Cancel",
   "authenticate": "Authenticate",
   "system": "System",
-  "no_apps": "No apps"
+  "no_apps": "No apps",
+  "clipboard": "Clipboard",
+  "clipboard_empty": "Clipboard history empty",
+  "emoji_picker": "Emoji Picker",
+  "emoji_search": "Search emoji..."
 }

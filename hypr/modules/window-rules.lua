@@ -26,17 +26,7 @@ hl.window_rule({
 
 -- ~/.config/hypr/hyprland.lua
 
-hl.window_rule({
-    name = "ghostty-dropdown-behavior",
-    match = { class = "com.domain.dropdown" },
-    float = true,
 
-    size = { "80%", "25%" },
-
-    move = { "10%", "0" },
-
-    animation = "slidevert"
-})
 
 hl.window_rule({
     name = "spotify-workspace",

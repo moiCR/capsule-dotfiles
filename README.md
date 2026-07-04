@@ -31,6 +31,7 @@ The following packages and dependencies must be installed on your system:
   * `python` (required to run script listings for themes/wallpapers/languages)
   * `gsettings-desktop-schemas` (for GTK theme and cursor application)
   * `qt5ct` & `qt6ct` (optional, to apply custom themes to Qt5/6 applications)
+  * `cliphist` (for clipboard history tracking)
 
 ## Installation
 

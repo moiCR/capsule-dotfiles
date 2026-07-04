@@ -5,7 +5,6 @@ hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("~/pro/dotfiles/theme/apply-t
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("ghostty -e btop"))
 
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(programs.terminal))
-hl.bind(mainMod .. "+ SHIFT + RETURN", hl.dsp.exec_cmd("ghostty --class=com.domain.dropdown"))
 
 hl.bind("PRINT", hl.dsp.exec_cmd("hyprshot -m monitor -output ~/Imágenes"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("hyprshot -m region --clipboard-only"))
@@ -14,7 +13,9 @@ hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(programs.code_editor))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 -- hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(programs.fileManager))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("quickshell ipc call capsule setMode clipboard"))
+hl.bind(mainMod .. " + period", hl.dsp.exec_cmd("quickshell ipc call capsule setMode emoji"))
 hl.bind(mainMod .. " + SUPER_L", hl.dsp.exec_cmd("quickshell ipc call capsule setMode launcher"), { release = true })
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))

@@ -49,7 +49,7 @@ ShellRoot {
         }
 
         function cycleMode(): void {
-            const modes = ["default", "workspaces", "system", "notifications", "tray", "launcher", "theme", "wallpaper", "language"];
+            const modes = ["default", "dashboard", "workspaces", "system", "notifications", "tray", "launcher", "theme", "wallpaper", "language", "clipboard", "emoji"];
             let idx = modes.indexOf(capsule.currentMode);
             let nextIdx = (idx + 1) % modes.length;
             capsule.currentMode = modes[nextIdx];
