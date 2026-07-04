@@ -48,6 +48,7 @@ hl.window_rule({
     name = "steam-workspace",
     match = {
         class = "steam",
+        title = "^Steam$",
     },
     workspace = "special:steam"
 })
@@ -55,10 +56,18 @@ hl.window_rule({
 hl.window_rule({
     name = "steam-floating-popups",
     match = {
-        class = "steam",
-        title = "^(?!Steam).*$",
+        class = "steam"
     },
     float = true,
+})
+
+hl.window_rule({
+    name = "steam-main-tile",
+    match = {
+        class = "steam",
+        title = "^Steam$",
+    },
+    float = false,
 })
 
 hl.layer_rule({
