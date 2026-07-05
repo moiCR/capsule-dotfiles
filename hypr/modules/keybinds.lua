@@ -60,14 +60,16 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("spotify"))
 
 -- Dynamic Dock Mode Controls (Quickshell IPC)
-hl.bind(mainMod .. " + ALT + D", hl.dsp.exec_cmd("quickshell ipc call capsule cycleMode"))
 hl.bind(mainMod .. " + ALT + 1", hl.dsp.exec_cmd("quickshell ipc call capsule setMode default"))
 hl.bind(mainMod .. " + ALT + 2", hl.dsp.exec_cmd("quickshell ipc call capsule setMode workspaces"))
 hl.bind(mainMod .. " + ALT + 3", hl.dsp.exec_cmd("quickshell ipc call capsule setMode system"))
-hl.bind(mainMod .. " + ALT + 4", hl.dsp.exec_cmd("quickshell ipc call capsule setMode notifications"))
+hl.bind(mainMod .. " + ALT + 4", hl.dsp.exec_cmd("quickshell ipc call capsule setMode power"))
 hl.bind(mainMod .. " + ALT + 5", hl.dsp.exec_cmd("quickshell ipc call capsule setMode tray"))
 hl.bind(mainMod .. " + ALT + 6", hl.dsp.exec_cmd("quickshell ipc call capsule setMode launcher"))
 hl.bind(mainMod .. " + ALT + 7", hl.dsp.exec_cmd("quickshell ipc call capsule setMode theme"))
 hl.bind(mainMod .. " + ALT + 8", hl.dsp.exec_cmd("quickshell ipc call capsule setMode wallpaper"))
 hl.bind(mainMod .. " + ALT + 9", hl.dsp.exec_cmd("quickshell ipc call capsule setMode language"))
+
+-- Toggle Settings Panel
+hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("quickshell ipc call settings toggle"))
 

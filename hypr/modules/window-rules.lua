@@ -24,9 +24,6 @@ hl.window_rule({
     float = true,
 })
 
--- ~/.config/hypr/hyprland.lua
-
-
 
 hl.window_rule({
     name = "spotify-workspace",
@@ -44,6 +41,8 @@ hl.window_rule({
     workspace = "special:discord"
 })
 
+
+
 hl.window_rule({
     name = "steam-workspace",
     match = {
@@ -57,6 +56,14 @@ hl.window_rule({
     name = "steam-floating-popups",
     match = {
         class = "steam"
+    },
+    float = true,
+})
+
+hl.window_rule({
+    name = "bitwarden-floating",
+    match = {
+        class = "Bitwarden"
     },
     float = true,
 })

@@ -17,6 +17,7 @@ PanelWindow {
 
     property var wifiPrompt: null
     property var settingsWindow: null
+    property var toaster: null
     property string currentMode: "default"
 
     property var activeNotification: null
@@ -77,9 +78,9 @@ PanelWindow {
         right: true
     }
 
-    WlrLayershell.exclusiveZone: 35
+    WlrLayershell.exclusiveZone: 25
     WlrLayershell.layer: currentMode === "launcher" ? WlrLayer.Overlay : WlrLayer.Top
-    WlrLayershell.keyboardFocus: (currentMode === "launcher" || currentMode === "tray_expanded" || currentMode === "theme" || currentMode === "wallpaper" || currentMode === "language" || currentMode === "authentication" || currentMode === "clipboard" || currentMode === "emoji") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: (currentMode === "launcher" || currentMode === "tray_expanded" || currentMode === "theme" || currentMode === "wallpaper" || currentMode === "language" || currentMode === "authentication" || currentMode === "clipboard" || currentMode === "emoji" || currentMode === "power") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     property int windowHeight: 48
     implicitHeight: windowHeight
@@ -260,8 +261,8 @@ PanelWindow {
                 name: "dashboard"
                 PropertyChanges {
                     target: capsuleBg
-                    width: 420
-                    height: 310
+                    width: loader.item ? loader.item.implicitWidth : 348
+                    height: loader.item ? loader.item.implicitHeight : 500
                     radius: 20
                 }
             },
@@ -372,6 +373,15 @@ PanelWindow {
                     height: loader.item ? loader.item.implicitHeight : 190
                     radius: 24
                 }
+            },
+            State {
+                name: "power"
+                PropertyChanges {
+                    target: capsuleBg
+                    width: loader.item ? loader.item.implicitWidth : 420
+                    height: loader.item ? loader.item.implicitHeight : 130
+                    radius: 20
+                }
             }
         ]
 
@@ -402,12 +412,12 @@ PanelWindow {
             anchors.topMargin: {
                 if (capsule.currentMode === "tray" || capsule.currentMode === "tray_expanded")
                     return 8;
-                if (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard")
+                if (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard" || capsule.currentMode === "power")
                     return 16;
                 return 0;
             }
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard") ? undefined : parent.verticalCenter
+            anchors.verticalCenter: (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard" || capsule.currentMode === "power") ? undefined : parent.verticalCenter
 
             sourceComponent: {
                 switch (capsule.currentMode) {
@@ -436,6 +446,8 @@ PanelWindow {
                     return emojiComp;
                 case "dashboard":
                     return dashboardComp;
+                case "power":
+                    return powerComp;
                 default:
                     return defaultComp;
                 }
@@ -497,6 +509,27 @@ PanelWindow {
 
     Component {
         id: dashboardComp
-        CapsuleDashboard {}
+        CapsuleDashboard {
+            toaster: capsule.toaster
+        }
+    }
+
+    Component {
+        id: powerComp
+        CapsulePower {}
+    }
+
+    Process {
+        id: globalPowerProcess
+        onExited: (exitCode) => {
+            capsule.powerCommandFinished();
+        }
+    }
+
+    signal powerCommandFinished()
+
+    function runPowerCommand(cmd) {
+        globalPowerProcess.command = cmd;
+        globalPowerProcess.running = true;
     }
 }

@@ -14,7 +14,7 @@ if [[ -z "$MODE" ]]; then
     fi
 fi
 
-SRC="$THEME_DIR/$MODE.json"
+SRC="$THEME_DIR/types/$MODE.json"
 LANG=$(python3 -c "import json; print(json.load(open('$THEME_DIR/current.json'))['lang'])" 2>/dev/null || echo "es")
 cp "$SRC" "$THEME_DIR/current.json"
 python3 -c "import json; d = json.load(open('$THEME_DIR/current.json')); d['lang'] = '$LANG'; d['theme'] = '$MODE'; json.dump(d, open('$THEME_DIR/current.json', 'w'), indent=2)"

@@ -55,7 +55,9 @@ DEPENDENCIES=(
     "playerctl"
     "python"
     "gsettings-desktop-schemas"
-    "cliphist"
+    "cliphist",
+    "cpupower",
+    "nautilus"
 )
 
 print_status "Checking package status..."

@@ -15,6 +15,7 @@ ShellRoot {
         id: capsule
         wifiPrompt: wifiPrompt
         settingsWindow: settingsWindow
+        toaster: toaster
     }
 
     Launcher {
@@ -42,6 +43,13 @@ ShellRoot {
     }
 
     IpcHandler {
+        target: "settings"
+        function toggle(): void {
+            settingsWindow.toggle();
+        }
+    }
+
+    IpcHandler {
         target: "capsule"
 
         function setMode(mode: string): void {
@@ -49,7 +57,7 @@ ShellRoot {
         }
 
         function cycleMode(): void {
-            const modes = ["default", "dashboard", "workspaces", "system", "notifications", "tray", "launcher", "theme", "wallpaper", "language", "clipboard", "emoji"];
+            const modes = ["default", "dashboard", "workspaces", "system", "notifications", "tray", "launcher", "theme", "wallpaper", "language", "clipboard", "emoji", "power"];
             let idx = modes.indexOf(capsule.currentMode);
             let nextIdx = (idx + 1) % modes.length;
             capsule.currentMode = modes[nextIdx];

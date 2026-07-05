@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fe8cb2cc-f567-468d-82c3-beee16a45c45" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/fish/theme.fish" beforeDir="false" afterPath="$PROJECT_DIR$/fish/theme.fish" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hypr/modules/animations.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hypr/modules/animations.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hypr/modules/appearance.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hypr/modules/appearance.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hypr/modules/keybinds.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hypr/modules/keybinds.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hypr/modules/programs.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hypr/modules/programs.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hypr/modules/theme.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hypr/modules/theme.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hypr/modules/window-rules.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hypr/modules/window-rules.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quickshell/panels/capsule/CapsuleDashboard.qml" beforeDir="false" afterPath="$PROJECT_DIR$/quickshell/panels/capsule/CapsuleDashboard.qml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quickshell/panels/capsule/CapsuleDefault.qml" beforeDir="false" afterPath="$PROJECT_DIR$/quickshell/panels/capsule/CapsuleDefault.qml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quickshell/panels/capsule/CapsuleWallpaper.qml" beforeDir="false" afterPath="$PROJECT_DIR$/quickshell/panels/capsule/CapsuleWallpaper.qml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quickshell/panels/settings/Settings.qml" beforeDir="false" afterPath="$PROJECT_DIR$/quickshell/panels/settings/Settings.qml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quickshell/shell.qml" beforeDir="false" afterPath="$PROJECT_DIR$/quickshell/shell.qml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terminals/theme.ghostty" beforeDir="false" afterPath="$PROJECT_DIR$/terminals/theme.ghostty" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3G6FoLTB3HmtW9f7s7WThPZsIRq" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fe8cb2cc-f567-468d-82c3-beee16a45c45" name="Changes" comment="" />
+      <created>1783284285905</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1783284285905</updated>
+    </task>
+    <servers />
+  </component>
+</project>

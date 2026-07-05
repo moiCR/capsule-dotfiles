@@ -1,0 +1,14 @@
+{
+  "mode": "light",
+  "bg": "#eff1f5",
+  "bgAlt": "#e6e9ef",
+  "surface": "#ccd0da",
+  "fg": "#4c4f69",
+  "fgMuted": "#6c6f85",
+  "accent": "#1e66f5",
+  "red": "#d20f39",
+  "green": "#40a02b",
+  "activeBorder1": "rgba(1e66f5ee)",
+  "activeBorder2": "rgba(40a02bee)",
+  "inactiveBorder": "rgba(9ca0b0aa)"
+}
