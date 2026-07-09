@@ -63,6 +63,8 @@ AUR_DEPENDENCIES=(
     "cliphist"
     "cpupower"
     "hyprlock"
+    "qt5ct"
+    "qt6ct"
 )
 
 print_status "Checking package status..."
