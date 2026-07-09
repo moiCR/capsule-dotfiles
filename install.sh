@@ -40,7 +40,7 @@ fi
 
 print_success "Found AUR helper: \e[1;36m$AUR_HELPER\e[0m"
 
-DEPENDENCIES=(
+AUR_DEPENDENCIES=(
     "hyprland"
     "quickshell"
     "ttf-jetbrains-mono-nerd"
@@ -55,19 +55,23 @@ DEPENDENCIES=(
     "playerctl"
     "python"
     "gsettings-desktop-schemas"
-    "cliphist",
-    "cpupower",
     "nautilus"
+    "hyprpaper"
+    "hyprshot"
+    "zen-browser-bin"
+    "yazi"
+    "cliphist"
+    "cpupower"
 )
 
 print_status "Checking package status..."
 TO_INSTALL=()
 
-for pkg in "${DEPENDENCIES[@]}"; do
-    if pacman -Qq "$pkg" &>/dev/null; then
-        echo -e "  \e[1;32m✔\e[0m $pkg \e[2minstalled\e[0m"
+for pkg in "${AUR_DEPENDENCIES[@]}"; do
+    if "$AUR_HELPER" -Qq "$pkg" &>/dev/null; then
+        echo -e "  \e[1;32m✔ \e[0m $pkg \e[2minstalled\e[0m"
     else
-        echo -e "  \e[1;33m➜\e[0m $pkg \e[1mwill be installed\e[0m"
+        echo -e "  \e[1;33m➜ \e[0m $pkg \e[1mwill be installed\e[0m"
         TO_INSTALL+=("$pkg")
     fi
 done
@@ -142,3 +146,15 @@ create_symlink "$DOTFILES_DIR/terminals/config.ghostty" "$HOME/.config/ghostty/c
 
 echo -e "----------------------------------------"
 print_success "Setup completed successfully!"
+
+if command -v hyprctl &>/dev/null && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+    print_status "Reloading Hyprland..."
+    hyprctl reload
+    print_success "Hyprland reloaded!"
+fi
+
+# Start Quickshell
+if command -v qs &>/dev/null; then
+    print_status "Starting Quickshell..."
+    qs & disown
+fi
