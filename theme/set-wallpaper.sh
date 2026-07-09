@@ -4,7 +4,6 @@ set -euo pipefail
 WALLPAPER_PATH="$1"
 HYPR_DIR="$HOME/pro/dotfiles/hypr"
 
-# Ensure the config directory exists
 mkdir -p "$HYPR_DIR"
 CONF_FILE="$HYPR_DIR/hyprpaper.conf"
 
@@ -14,17 +13,39 @@ if ! pgrep hyprpaper >/dev/null; then
     sleep 0.5
 fi
 
-# Preload and set wallpaper using hyprctl
+# Preload and set wallpaper live
 hyprctl hyprpaper preload "$WALLPAPER_PATH" || true
 hyprctl hyprpaper wallpaper ",$WALLPAPER_PATH" || true
 
-# Persist in hyprpaper.conf so it persists after reboot!
-echo "preload = $WALLPAPER_PATH" > "$CONF_FILE"
-echo "wallpaper = ,$WALLPAPER_PATH" >> "$CONF_FILE"
-echo "splash = false" >> "$CONF_FILE"
+# Persist in hyprpaper.conf
+cat > "$CONF_FILE" <<EOF
+preload = $WALLPAPER_PATH
 
-# Also write to current.json so QML settings can track active wallpaper
+wallpaper {
+    monitor =
+    path = $WALLPAPER_PATH
+}
+
+splash = false
+EOF
+
+# Update current.json
 THEME_DIR="$HOME/pro/dotfiles/theme"
-python3 -c "import json; d = json.load(open('$THEME_DIR/current.json')); d['wallpaper'] = '$WALLPAPER_PATH'; json.dump(d, open('$THEME_DIR/current.json', 'w'), indent=2)"
+
+python3 - "$THEME_DIR/current.json" "$WALLPAPER_PATH" <<'PY'
+import json
+import sys
+
+path = sys.argv[1]
+wallpaper = sys.argv[2]
+
+with open(path) as f:
+    data = json.load(f)
+
+data["wallpaper"] = wallpaper
+
+with open(path, "w") as f:
+    json.dump(data, f, indent=2)
+PY
 
 echo "Wallpaper set to: $WALLPAPER_PATH"
