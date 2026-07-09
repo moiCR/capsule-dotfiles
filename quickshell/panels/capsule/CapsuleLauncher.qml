@@ -129,7 +129,7 @@ Item {
 
                         Text {
                             text: appDelegate.modelData.name
-                            color: "#ffffff"
+                            color: Theme.fg
                             font.family: Theme.fontFamily
                             font.pixelSize: 13
                             font.bold: true

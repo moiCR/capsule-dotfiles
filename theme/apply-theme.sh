@@ -29,6 +29,18 @@ for k, v in data.items():
 print("}")
 PYEOF
 
+python3 - "$SRC" > "$HOME/pro/dotfiles/hypr/hyprlock-colors.conf" <<'PYEOF'
+import json, sys
+
+data = json.load(open(sys.argv[1]))
+for k, v in data.items():
+    if isinstance(v, str):
+        if v.startswith("#"):
+            print(f"${k} = 0xff{v[1:]}")
+        elif v.startswith("rgba(") or v.startswith("rgb("):
+            print(f"${k} = {v}")
+PYEOF
+
 python3 - "$SRC" <<'PYEOF'
 import json, sys
 

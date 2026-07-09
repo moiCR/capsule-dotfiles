@@ -80,7 +80,7 @@ PanelWindow {
 
     WlrLayershell.exclusiveZone: 25
     WlrLayershell.layer: currentMode === "launcher" ? WlrLayer.Overlay : WlrLayer.Top
-    WlrLayershell.keyboardFocus: (currentMode === "launcher" || currentMode === "tray_expanded" || currentMode === "theme" || currentMode === "wallpaper" || currentMode === "language" || currentMode === "authentication" || currentMode === "clipboard" || currentMode === "emoji" || currentMode === "power") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: (currentMode === "launcher" || currentMode === "tray_expanded" || currentMode === "theme" || currentMode === "wallpaper" || currentMode === "language" || currentMode === "authentication" || currentMode === "clipboard" || currentMode === "emoji" || currentMode === "power" || currentMode === "session") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     property int windowHeight: 48
     implicitHeight: windowHeight
@@ -382,6 +382,15 @@ PanelWindow {
                     height: loader.item ? loader.item.implicitHeight : 130
                     radius: 20
                 }
+            },
+            State {
+                name: "session"
+                PropertyChanges {
+                    target: capsuleBg
+                    width: loader.item ? loader.item.implicitWidth : 420
+                    height: loader.item ? loader.item.implicitHeight : 130
+                    radius: 20
+                }
             }
         ]
 
@@ -412,12 +421,12 @@ PanelWindow {
             anchors.topMargin: {
                 if (capsule.currentMode === "tray" || capsule.currentMode === "tray_expanded")
                     return 8;
-                if (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard" || capsule.currentMode === "power")
+                if (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard" || capsule.currentMode === "power" || capsule.currentMode === "session")
                     return 16;
                 return 0;
             }
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard" || capsule.currentMode === "power") ? undefined : parent.verticalCenter
+            anchors.verticalCenter: (capsule.currentMode === "theme" || capsule.currentMode === "wallpaper" || capsule.currentMode === "language" || capsule.currentMode === "clipboard" || capsule.currentMode === "emoji" || capsule.currentMode === "dashboard" || capsule.currentMode === "power" || capsule.currentMode === "session") ? undefined : parent.verticalCenter
 
             sourceComponent: {
                 switch (capsule.currentMode) {
@@ -448,6 +457,8 @@ PanelWindow {
                     return dashboardComp;
                 case "power":
                     return powerComp;
+                case "session":
+                    return sessionComp;
                 default:
                     return defaultComp;
                 }
@@ -519,10 +530,28 @@ PanelWindow {
         CapsulePower {}
     }
 
+    Component {
+        id: sessionComp
+        CapsuleSession {}
+    }
+
     Process {
         id: globalPowerProcess
         onExited: (exitCode) => {
             capsule.powerCommandFinished();
+        }
+    }
+
+    Process {
+        id: sessionProcess
+        stdout: SplitParser {
+            onRead: data => console.log("sessionProcess stdout: " + data)
+        }
+        stderr: SplitParser {
+            onRead: data => console.warn("sessionProcess stderr: " + data)
+        }
+        onExited: (exitCode, exitStatus) => {
+            console.log("sessionProcess exited with code: " + exitCode + ", status: " + exitStatus)
         }
     }
 
@@ -531,5 +560,11 @@ PanelWindow {
     function runPowerCommand(cmd) {
         globalPowerProcess.command = cmd;
         globalPowerProcess.running = true;
+    }
+
+    function runSessionCommand(cmd) {
+        sessionProcess.running = false;
+        sessionProcess.command = cmd;
+        sessionProcess.running = true;
     }
 }

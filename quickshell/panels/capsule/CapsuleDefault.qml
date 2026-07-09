@@ -37,7 +37,7 @@ Item {
 
         Text {
             text: Qt.formatDateTime(sysClock.date, "hh:mm")
-            color: "#ffffff"
+            color: Theme.fg
             font.family: Theme.fontFamily
             font.pixelSize: 13
             font.bold: true

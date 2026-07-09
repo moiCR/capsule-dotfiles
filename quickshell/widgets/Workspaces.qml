@@ -46,7 +46,7 @@ Item {
             return "Workspace " + currentWs.id;
         }
 
-        color: "#ffffff"
+        color: Theme.fg
         font.family: Theme.fontFamily
         font.pixelSize: 14
         font.bold: true

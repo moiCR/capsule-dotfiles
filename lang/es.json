@@ -96,5 +96,11 @@
   "clipboard": "Portapapeles",
   "clipboard_empty": "Historial de portapapeles vacío",
   "emoji_picker": "Selector de Emojis",
-  "emoji_search": "Buscar emoji..."
+  "emoji_search": "Buscar emoji...",
+  "session_title": "Opciones de Sesión",
+  "lock": "Bloquear",
+  "suspend": "Suspender",
+  "logout": "Cerrar Sesión",
+  "reboot": "Reiniciar",
+  "shutdown": "Apagar"
 }

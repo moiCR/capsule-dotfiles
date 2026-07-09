@@ -10,47 +10,17 @@ Item {
     readonly property int cardHeight: 74
     readonly property int pad: 16
 
-    implicitWidth: 3 * cardWidth + 2 * 10 + pad * 2   // = 388 + 32 = 420 → matches dock state
+    implicitWidth: 3 * cardWidth + 2 * 10 + pad * 2 
     implicitHeight: 2 * cardHeight + 10 + 20 + 12 + 1 + 12 + pad
 
     focus: true
-    Component.onCompleted: themeWrapper.forceActiveFocus()
+    Component.onCompleted: {
+        themeWrapper.forceActiveFocus();
+        Theme.listThemesProcess.running = true;
+    }
     Keys.onEscapePressed: capsule.currentMode = "default"
 
-    readonly property var themes: [
-        { "id": "ayu_dark", "name": "Ayu Dark", "bg": "#0f1419", "accent": "#f29718" },
-        { "id": "ayu_light", "name": "Ayu Light", "bg": "#fafafa", "accent": "#ff9900" },
-        { "id": "ayu_mirage", "name": "Ayu Mirage", "bg": "#171b24", "accent": "#f29718" },
-        { "id": "catppuccin", "name": "Catppuccin", "bg": "#1e1e2e", "accent": "#cba6f7" },
-        { "id": "dark", "name": "Dark", "bg": "#242424", "accent": "#89b4fa" },
-        { "id": "dracula", "name": "Dracula", "bg": "#282a36", "accent": "#bd93f9" },
-        { "id": "github_dark", "name": "Github Dark", "bg": "#0d1117", "accent": "#58a6ff" },
-        { "id": "github_light", "name": "Github Light", "bg": "#ffffff", "accent": "#0969da" },
-        { "id": "gruvbox_dark", "name": "Gruvbox Dark", "bg": "#282828", "accent": "#fe8019" },
-        { "id": "gruvbox_light", "name": "Gruvbox Light", "bg": "#fbf1c7", "accent": "#af3a03" },
-        { "id": "light", "name": "Light", "bg": "#eff1f5", "accent": "#1e66f5" },
-        { "id": "matrix", "name": "Matrix", "bg": "#040804", "accent": "#00ff00" },
-        { "id": "nord", "name": "Nord", "bg": "#2e3440", "accent": "#88c0d0" },
-        { "id": "oled", "name": "OLED", "bg": "#000000", "accent": "#3abff8" },
-        { "id": "one_dark", "name": "One Dark", "bg": "#282c34", "accent": "#61afef" },
-        { "id": "rose_pine", "name": "Rose Pine", "bg": "#191724", "accent": "#ebbcba" },
-        { "id": "tokyonight", "name": "Tokyonight", "bg": "#1a1b26", "accent": "#7aa2f7" },
-        { "id": "cyberpunk_green", "name": "Cyberpunk Green", "bg": "#090d16", "accent": "#00ff66" },
-        { "id": "dark_blue", "name": "Dark Blue", "bg": "#242424", "accent": "#3498db" },
-        { "id": "dark_green", "name": "Dark Green", "bg": "#242424", "accent": "#2ecc71" },
-        { "id": "dark_red", "name": "Dark Red", "bg": "#242424", "accent": "#e74c3c" },
-        { "id": "dark_yellow", "name": "Dark Yellow", "bg": "#242424", "accent": "#f1c40f" },
-        { "id": "light_blue", "name": "Light Blue", "bg": "#eff1f5", "accent": "#2980b9" },
-        { "id": "light_green", "name": "Light Green", "bg": "#eff1f5", "accent": "#27ae60" },
-        { "id": "light_red", "name": "Light Red", "bg": "#eff1f5", "accent": "#c0392b" },
-        { "id": "light_yellow", "name": "Light Yellow", "bg": "#eff1f5", "accent": "#d35400" },
-        { "id": "oled_blue", "name": "OLED Blue", "bg": "#000000", "accent": "#3498db" },
-        { "id": "oled_green", "name": "OLED Green", "bg": "#000000", "accent": "#2ecc71" },
-        { "id": "oled_red", "name": "OLED Red", "bg": "#000000", "accent": "#e74c3c" },
-        { "id": "oled_yellow", "name": "OLED Yellow", "bg": "#000000", "accent": "#f1c40f" }
-
-
-    ]
+    readonly property var themes: Theme.themesList
 
     Process {
         id: applyThemeProcess
@@ -178,7 +148,7 @@ Item {
                                 text: modelData.name
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 10
-                                color: modelData.id === "light" || modelData.id === "github_light" || modelData.id === "ayu_light" || modelData.id === "gruvbox_light" ? "#4c4f69" : Qt.rgba(1,1,1,0.7)
+                                color: modelData.fg
                                 anchors.horizontalCenter: parent.horizontalCenter
                             }
                         }

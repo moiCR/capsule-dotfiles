@@ -1,0 +1,11 @@
+{
+  "mode": "dark",
+  "bg": "#ffffff",
+  "bgAlt": "#d1d1d1",
+  "surface": "#9c9c9c",
+  "fg": "#000000",
+  "fgMuted": "#a6a4a4",
+  "accent": "#000000",
+  "red": "#fa6666",
+  "green": "#70fa93"
+}

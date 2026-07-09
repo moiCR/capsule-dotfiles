@@ -12,7 +12,7 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(programs.browser))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(programs.code_editor))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 -- hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(programs.fileManager))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty -e yazi"))
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("quickshell ipc call capsule setMode clipboard"))
 hl.bind(mainMod .. " + period", hl.dsp.exec_cmd("quickshell ipc call capsule setMode emoji"))
@@ -73,3 +73,5 @@ hl.bind(mainMod .. " + ALT + 9", hl.dsp.exec_cmd("quickshell ipc call capsule se
 -- Toggle Settings Panel
 hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("quickshell ipc call settings toggle"))
 
+-- Toggle Session Panel (Power Menu)
+hl.bind(mainMod .. " + ESCAPE", hl.dsp.exec_cmd("quickshell ipc call capsule setMode session"))

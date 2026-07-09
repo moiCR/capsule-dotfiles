@@ -272,6 +272,27 @@ Item {
                 }
             }
 
+            // Power/Session button at the top-right
+            Text {
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                text: "\uf011" // Power icon
+                font.family: Theme.fontFamily
+                font.pixelSize: 13
+                color: powerBtnMouse.containsMouse ? Theme.red : Theme.fgMuted
+                Behavior on color { ColorAnimation { duration: 120 } }
+
+                MouseArea {
+                    id: powerBtnMouse
+                    anchors.fill: parent
+                    anchors.margins: -6
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        capsule.currentMode = "session";
+                    }
+                }
+            }
         }
 
         Rectangle {

@@ -44,6 +44,29 @@ QtObject {
     property int radius: 42
     property int spacing: 8
 
+    property var themesList: []
+    property string themesBuffer: ""
+
+    property Process listThemesProcess: Process {
+        command: ["python3", Quickshell.env("HOME") + "/pro/dotfiles/theme/list_themes.py"]
+        running: true
+        onStarted: {
+            theme.themesBuffer = "";
+        }
+        stdout: SplitParser {
+            onRead: data => {
+                theme.themesBuffer += data;
+            }
+        }
+        onExited: (exitCode, exitStatus) => {
+            try {
+                theme.themesList = JSON.parse(theme.themesBuffer.trim());
+            } catch(e) {
+                console.log("Error parsing themes JSON: " + e);
+            }
+        }
+    }
+
     property FileView _file: FileView {
         path: Quickshell.env("HOME") + "/pro/dotfiles/theme/current.json"
         watchChanges: true
@@ -64,5 +87,13 @@ QtObject {
             theme.red = d.red ?? theme.red;
             theme.green = d.green ?? theme.green;
         }
+    }
+
+    onCurrentLangChanged: {
+        updateHyprlockLangProcess.running = true;
+    }
+
+    property Process updateHyprlockLangProcess: Process {
+        command: ["sh", "-c", "LANG_VAL=$(jq -r '.lang' ~/pro/dotfiles/theme/current.json 2>/dev/null || echo 'es'); if [ \"$LANG_VAL\" = \"es\" ]; then echo '$placeholder_text = <i>Introduce contraseña...</i>' > ~/pro/dotfiles/hypr/hyprlock-lang.conf; echo '$greeting_text = Hola, $USER' >> ~/pro/dotfiles/hypr/hyprlock-lang.conf; else echo '$placeholder_text = <i>Enter password...</i>' > ~/pro/dotfiles/hypr/hyprlock-lang.conf; echo '$greeting_text = Hello, $USER' >> ~/pro/dotfiles/hypr/hyprlock-lang.conf; fi"]
     }
 }

@@ -96,5 +96,11 @@
   "clipboard": "Clipboard",
   "clipboard_empty": "Clipboard history empty",
   "emoji_picker": "Emoji Picker",
-  "emoji_search": "Search emoji..."
+  "emoji_search": "Search emoji...",
+  "session_title": "Session Options",
+  "lock": "Lock",
+  "suspend": "Suspend",
+  "logout": "Log Out",
+  "reboot": "Reboot",
+  "shutdown": "Shutdown"
 }
