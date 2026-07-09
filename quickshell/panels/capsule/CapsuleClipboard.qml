@@ -17,14 +17,12 @@ Item {
         id: clipModel
     }
 
-    // Helper to copy item to clipboard and close
+    // El Helper ahora solo inicia el proceso de forma segura
     function copyItem(clipId) {
         copyClipProcess.command = ["bash", "-c", "echo -e '" + clipId + "\\t' | cliphist decode | wl-copy"];
         copyClipProcess.running = true;
-        capsule.currentMode = "default";
     }
 
-    // Process to list the top 20 clipboard entries as a clean JSON list
     Process {
         id: listClipsProcess
         command: [
@@ -38,7 +36,6 @@ Item {
                     clipModel.clear();
                     for (let i = 0; i < items.length; i++) {
                         let txt = items[i].text || "";
-                        // Limit display preview size
                         if (txt.length > 80) txt = txt.substring(0, 80) + "...";
                         clipModel.append({ "clipId": items[i].id, "clipText": txt });
                     }
@@ -49,9 +46,14 @@ Item {
         }
     }
 
-    // Process to copy selected decoded item
+    // Aquí está el cambio: Manejamos el cambio de modo cuando el proceso finaliza
     Process {
         id: copyClipProcess
+        onRunningChanged: {
+            if (!running) {
+                capsule.currentMode = "default";
+            }
+        }
     }
 
     // Process to delete specific item
@@ -177,7 +179,6 @@ Item {
                 boundsBehavior: Flickable.StopAtBounds
                 focus: true
 
-                // Keep keyboard focus inside the ListView
                 Component.onCompleted: listView.forceActiveFocus()
 
                 delegate: Rectangle {
@@ -186,7 +187,6 @@ Item {
                     height: 36
                     radius: 8
 
-                    // Selected/highlighted state when using arrows, or hovered
                     property bool isCurrent: listView.currentIndex === index
                     color: isCurrent || itemMouse.containsMouse
                         ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12)
@@ -213,7 +213,7 @@ Item {
                             font.pixelSize: 11
                             color: isCurrent || itemMouse.containsMouse ? Theme.accent : Theme.fgMuted
                             anchors.verticalCenter: parent.verticalCenter
-                            
+
                             Behavior on color { ColorAnimation { duration: 120 } }
                         }
 
@@ -260,7 +260,6 @@ Item {
 
                     MouseArea {
                         id: itemMouse
-                        // Fill parent but subtract the delete button on the right
                         width: parent.width - 32
                         height: parent.height
                         hoverEnabled: true
@@ -271,7 +270,6 @@ Item {
                     }
                 }
 
-                // Keyboard handling inside the ListView
                 Keys.onReturnPressed: {
                     if (currentIndex >= 0 && currentIndex < model.count) {
                         let item = model.get(currentIndex);
