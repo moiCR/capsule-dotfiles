@@ -13,6 +13,7 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: active ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     WlrLayershell.namespace: "quickshell:settings"
+    WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
     anchors {
         top: true
@@ -45,6 +46,16 @@ PanelWindow {
     // Dismissal / Entrance Animations state
     property bool active: false
 
+    // Expose processes as properties for sub-views
+    property alias wifiToggleProcess: wifiToggleProcess
+    property alias themeToggleProcess: themeToggleProcess
+    property alias wifiConnectProcess: wifiConnectProcess
+    property alias wifiTryConnectProcess: wifiTryConnectProcess
+    property alias langWriteProcess: langWriteProcess
+    property alias hyprReloadProcess: hyprReloadProcess
+    property alias setWallpaperProcess: setWallpaperProcess
+    property alias setBarPosProcess: setBarPosProcess
+
     // Add Bind properties
     property bool showAddBind: false
     property string newKeysInput: ""
@@ -62,6 +73,7 @@ PanelWindow {
     function closePanel() {
         active = false;
         closeTimer.start();
+        resetSubmapProcess.running = true;
     }
 
     function toggle() {
@@ -215,8 +227,15 @@ PanelWindow {
                     } else if (actionRaw.includes("window.resize")) {
                         desc = "Redimensionar ventana";
                     }
+                    let rawCmd = actionRaw;
+                    if (actionRaw.includes("exec_cmd")) {
+                        let cmdMatch = actionRaw.match(/exec_cmd\(([^)]+)\)/);
+                        if (cmdMatch) {
+                            rawCmd = cmdMatch[1].replace(/programs\./, "").replace(/"/g, "");
+                        }
+                    }
                     desc = desc.charAt(0).toUpperCase() + desc.slice(1);
-                    binds.push({ "keys": keys, "desc": desc });
+                    binds.push({ "keys": keys, "desc": desc, "cmd": rawCmd });
                 }
             }
         }
@@ -237,31 +256,32 @@ PanelWindow {
     // Click outside to close (with dark overlay backdrop)
     MouseArea {
         anchors.fill: parent
+        hoverEnabled: false
         onClicked: settingsWindow.closePanel()
 
         Rectangle {
             anchors.fill: parent
-            color: "#66000000" // 40% opacity black backdrop for focus
-            opacity: settingsWindow.active ? 1 : 0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            color: "#0c0d12"
+            opacity: settingsWindow.active ? 0.6 : 0
+            Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutQuad } }
         }
     }
 
-    // Main Card (Glassmorphic Capsule/Dock Style - LARGER 780x480px)
+    // Main Card (Solid Capsule Style - 820x520px)
     Rectangle {
         id: box
 
         // Target dimensions
-        readonly property int targetWidth: 780
-        readonly property int targetHeight: 480
+        readonly property int targetWidth: 820
+        readonly property int targetHeight: 520
         readonly property int targetRadius: 24
 
         // Centered coordinates on screen
-        readonly property real centerX: (parent.width - targetWidth) / 2
-        readonly property real centerY: (parent.height - targetHeight) / 2
+        readonly property real centerX: (Screen.width - targetWidth) / 2
+        readonly property real centerY: (Screen.height - targetHeight) / 2
 
         // Start position (dock position: top center)
-        readonly property real startX: (parent.width - 48) / 2
+        readonly property real startX: (Screen.width - 48) / 2
         readonly property real startY: 12
 
         // Current animating dimensions and position
@@ -271,10 +291,10 @@ PanelWindow {
         x: centerX
         y: centerY
 
-        // Dark translucent glassmorphic look
-        color: Qt.rgba(0.06, 0.05, 0.05, 0.88)
-        border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3)
-        border.width: 1.5
+        // Solid background matching the Capsule design
+        color: Theme.bg
+        border.color: Theme.bgAlt
+        border.width: 1
         clip: true
 
         states: [
@@ -367,32 +387,59 @@ PanelWindow {
             Item {
                 id: header
                 width: parent.width
-                height: 44
+                height: 54
                 anchors.top: parent.top
 
-                Text {
-                    text: Theme.currentLang === "es" ? "Ajustes" : "Settings"
-                    color: Theme.fg
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 13
-                    font.bold: true
-                    anchors.centerIn: parent
+                Row {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 20
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 10
+
+                    Text {
+                        text: "\uf013" // Gear icon
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 15
+                        color: Theme.accent
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: Theme.currentLang === "es" ? "Ajustes de Sistema" : "System Settings"
+                        color: Theme.fg
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 13
+                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
 
-                Text {
-                    text: "✕"
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 14
-                    color: closeMouse.containsMouse ? Theme.red : Theme.fgMuted
+                // Beautiful circular close button
+                Rectangle {
+                    width: 28
+                    height: 28
+                    radius: 14
+                    color: closeMouse.containsMouse ? Qt.rgba(Theme.red.r, Theme.red.g, Theme.red.b, 0.15) : "transparent"
+                    border.color: closeMouse.containsMouse ? Theme.red : "transparent"
+                    border.width: 1
                     anchors.right: parent.right
                     anchors.rightMargin: 18
                     anchors.verticalCenter: parent.verticalCenter
-                    Behavior on color { ColorAnimation { duration: 120 } }
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                    Behavior on border.color { ColorAnimation { duration: 150 } }
+
+                    Text {
+                        text: "\uf00d" // Close icon
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 11
+                        color: closeMouse.containsMouse ? Theme.red : Theme.fgMuted
+                        anchors.centerIn: parent
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
 
                     MouseArea {
                         id: closeMouse
                         anchors.fill: parent
-                        anchors.margins: -8
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: settingsWindow.closePanel()
@@ -405,7 +452,7 @@ PanelWindow {
                 id: headerDivider
                 width: parent.width
                 height: 1
-                color: Qt.rgba(Theme.bgAlt.r, Theme.bgAlt.g, Theme.bgAlt.b, 0.4)
+                color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
                 anchors.top: header.bottom
             }
 
@@ -419,24 +466,33 @@ PanelWindow {
                     id: sidebar
                     activeTab: settingsWindow.activeSettingsTab
                     settingsWindow: settingsWindow
+                    height: parent.height
                 }
 
                 // Vertical Separator
                 Rectangle {
                     width: 1
                     height: parent.height
-                    color: Qt.rgba(Theme.bgAlt.r, Theme.bgAlt.g, Theme.bgAlt.b, 0.4)
+                    color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
                 }
 
                 // View Page Container
                 Item {
-                    width: parent.width - 181
+                    width: parent.width - sidebar.width - 1
                     height: parent.height
                     clip: true
 
                     Loader {
-                        anchors.fill: parent
-                        anchors.margins: 20
+                        id: viewLoader
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.top: parent.top
+                        anchors.leftMargin: 20
+                        anchors.rightMargin: 20
+                        anchors.bottomMargin: 20
+                        anchors.topMargin: 20
+                        opacity: 0
                         source: {
                             switch(settingsWindow.activeSettingsTab) {
                                 case 0: return "SettingsStyleView.qml";
@@ -449,7 +505,14 @@ PanelWindow {
                             if (item) {
                                 item.settingsWindow = settingsWindow;
                             }
+                            fadeInAnimation.restart();
                         }
+                    }
+
+                    ParallelAnimation {
+                        id: fadeInAnimation
+                        NumberAnimation { target: viewLoader; property: "opacity"; from: 0.0; to: 1.0; duration: 220; easing.type: Easing.OutQuad }
+                        NumberAnimation { target: viewLoader; property: "anchors.topMargin"; from: 35; to: 20; duration: 250; easing.type: Easing.OutCubic }
                     }
                 }
             }
@@ -561,5 +624,10 @@ PanelWindow {
 
     Process {
         id: setBarPosProcess
+    }
+
+    Process {
+        id: resetSubmapProcess
+        command: ["hyprctl", "eval", "hl.dispatch(hl.dsp.submap(\"reset\"))"]
     }
 }

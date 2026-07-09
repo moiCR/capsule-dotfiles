@@ -1,7 +1,6 @@
 local programs = require("modules/programs")
 
 local mainMod = "SUPER"
-hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("~/pro/dotfiles/theme/apply-theme.sh"))
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("ghostty -e btop"))
 
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(programs.terminal))
@@ -75,3 +74,16 @@ hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("quickshell ipc call settings toggle"
 
 -- Toggle Session Panel (Power Menu)
 hl.bind(mainMod .. " + ESCAPE", hl.dsp.exec_cmd("quickshell ipc call capsule setMode session"))
+
+-- Empty submap to temporarily disable all binds during shortcut recording
+hl.define_submap("clean", function()
+    hl.bind("SUPER + ESCAPE", hl.dsp.submap("reset"))
+end)
+
+
+
+
+
+
+
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("zapzap"))

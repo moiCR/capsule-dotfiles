@@ -6,7 +6,7 @@ import Quickshell.Io
 
 Item {
     id: sidebarRoot
-    width: 180
+    width: 200
     height: parent.height
 
     property int activeTab: 0
@@ -20,104 +20,133 @@ Item {
     Column {
         anchors.fill: parent
         anchors.margins: 16
-        spacing: 20
+        spacing: 16
 
-        // 1. Top Logo/Burger Icon Row
+        // 1. User / Profile Card
         Row {
+            width: parent.width
             spacing: 12
-            width: parent.width
+            anchors.horizontalCenter: parent.horizontalCenter
 
-            Text {
-                text: "☰"
-                font.family: Theme.fontFamily
-                font.pixelSize: 18
-                color: Theme.fg
-                font.bold: true
-            }
-        }
+            // Avatar circle with dynamic gradient
+            Rectangle {
+                width: 38
+                height: 38
+                radius: 19
+                color: "transparent"
 
-        // 2. Large Edit Config button
-        Rectangle {
-            width: parent.width
-            height: 40
-            radius: 12
-            color: editMouse.containsMouse ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.25) : Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12)
-            border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3)
-            border.width: 1
-
-            Behavior on color { ColorAnimation { duration: 120 } }
-
-            Row {
-                anchors.centerIn: parent
-                spacing: 8
-                Text {
-                    text: "✏"
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 14
-                    color: Theme.accent
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: Theme.accent }
+                        GradientStop { position: 1.0; color: Qt.darker(Theme.accent, 1.4) }
+                    }
                 }
+
                 Text {
-                    text: Theme.currentLang === "es" ? "Editar Config" : "Edit Config"
+                    anchors.centerIn: parent
+                    text: "\uf007" // User icon
+                    font.family: Theme.fontFamily
+                    font.pixelSize: 15
+                    color: Theme.bg
+                    font.bold: true
+                }
+            }
+
+            // User Info
+            Column {
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 1
+
+                Text {
+                    text: "Moi"
                     font.family: Theme.fontFamily
                     font.pixelSize: 12
                     font.bold: true
-                    color: Theme.accent
+                    color: Theme.fg
                 }
-            }
-
-            MouseArea {
-                id: editMouse
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: editConfigProcess.running = true
+                Text {
+                    text: Theme.currentLang === "es" ? "Administrador" : "Administrator"
+                    font.family: Theme.fontFamily
+                    font.pixelSize: 9
+                    color: Theme.fgMuted
+                }
             }
         }
 
-        // Spacer
-        Item { width: 1; height: 10 }
+        // Horizontal Separator below profile card
+        Rectangle {
+            width: parent.width
+            height: 1
+            color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
+        }
 
-        // 3. Navigation Tabs List
+        // 2. Navigation Tabs List
         Column {
             width: parent.width
-            spacing: 8
+            spacing: 6
 
             Repeater {
                 model: [
-                    { "icon": "🎨", "name": Theme.currentLang === "es" ? "Estilo" : "Style" },
-                    { "icon": "⌨", "name": Theme.currentLang === "es" ? "Interfaz" : "Interface" },
-                    { "icon": "⚙", "name": Theme.currentLang === "es" ? "Servicios" : "Services" }
+                    { "icon": "\uf1fc", "name": Theme.currentLang === "es" ? "Estilo" : "Style" },
+                    { "icon": "\uf11c", "name": Theme.currentLang === "es" ? "Interfaz" : "Interface" },
+                    { "icon": "\uf085", "name": Theme.currentLang === "es" ? "Servicios" : "Services" }
                 ]
 
                 delegate: Rectangle {
+                    id: tabItem
                     width: parent.width
                     height: 38
-                    radius: 19 // Capsule style
-                    color: activeTab === index ? Theme.accent : (tabMouse.containsMouse ? Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.15) : "transparent")
-                    border.color: activeTab === index ? "transparent" : (tabMouse.containsMouse ? Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.1) : "transparent")
+                    radius: 10
+                    
+                    // Smooth transition color
+                    color: activeTab === index 
+                        ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12)
+                        : (tabMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.05) : "transparent")
+                    
+                    border.color: activeTab === index 
+                        ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.25)
+                        : (tabMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.08) : "transparent")
                     border.width: 1
 
                     Behavior on color { ColorAnimation { duration: 150 } }
+                    Behavior on border.color { ColorAnimation { duration: 150 } }
+
+                    // Left Indicator Pill
+                    Rectangle {
+                        width: 3
+                        height: activeTab === index ? 16 : 0
+                        radius: 1.5
+                        color: Theme.accent
+                        anchors.left: parent.left
+                        anchors.leftMargin: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                        
+                        Behavior on height {
+                            NumberAnimation { duration: 200; easing.type: Easing.OutQuad }
+                        }
+                    }
 
                     Row {
                         anchors.left: parent.left
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: 20
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 12
+                        spacing: 10
 
                         Text {
                             text: modelData.icon
                             font.family: Theme.fontFamily
-                            font.pixelSize: 13
-                            color: activeTab === index ? Theme.bg : Theme.fgMuted
+                            font.pixelSize: 12
+                            color: activeTab === index ? Theme.accent : Theme.fgMuted
                         }
 
                         Text {
                             text: modelData.name
                             font.family: Theme.fontFamily
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             font.bold: activeTab === index
-                            color: activeTab === index ? Theme.bg : Theme.fg
+                            color: activeTab === index ? Theme.accent : Theme.fg
                         }
                     }
 
@@ -127,13 +156,61 @@ Item {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            activeTab = index;
                             if (settingsWindow) {
                                 settingsWindow.activeSettingsTab = index;
                             }
                         }
                     }
                 }
+            }
+        }
+
+        // Spacer to push edit config button to the bottom
+        Item {
+            width: 1
+            height: sidebarRoot.height - 16 - 16 - 38 - 1 - 16 - (3 * 38 + 2 * 6) - 50 - 32
+        }
+
+        // 3. Edit Config Button at the bottom
+        Rectangle {
+            width: parent.width
+            height: 38
+            radius: 10
+            color: editMouse.containsMouse 
+                ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08) 
+                : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
+            border.color: editMouse.containsMouse 
+                ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2) 
+                : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
+            border.width: 1
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            Row {
+                anchors.centerIn: parent
+                spacing: 8
+                Text {
+                    text: "\uf044" // Edit icon
+                    font.family: Theme.fontFamily
+                    font.pixelSize: 12
+                    color: editMouse.containsMouse ? Theme.accent : Theme.fgMuted
+                }
+                Text {
+                    text: Theme.currentLang === "es" ? "Configuración" : "Dotfiles"
+                    font.family: Theme.fontFamily
+                    font.pixelSize: 11
+                    font.bold: true
+                    color: editMouse.containsMouse ? Theme.accent : Theme.fg
+                }
+            }
+
+            MouseArea {
+                id: editMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: editConfigProcess.running = true
             }
         }
     }
