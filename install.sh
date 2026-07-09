@@ -58,7 +58,7 @@ AUR_DEPENDENCIES=(
     "nautilus"
     "hyprpaper"
     "hyprshot"
-    "zen-browser-bin"
+    "brave-origin-bin"
     "yazi"
     "cliphist"
     "cpupower"
