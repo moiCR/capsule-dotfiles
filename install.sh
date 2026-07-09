@@ -62,6 +62,7 @@ AUR_DEPENDENCIES=(
     "yazi"
     "cliphist"
     "cpupower"
+    "hyprlock"
 )
 
 print_status "Checking package status..."
