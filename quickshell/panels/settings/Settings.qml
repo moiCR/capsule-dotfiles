@@ -173,10 +173,27 @@ PanelWindow {
             line = line.trim();
             if (line.startsWith("--") || line === "") continue;
             if (line.includes("hl.bind(")) {
-                let match = line.match(/hl\.bind\(([^,]+),\s*([^,\)]+)/);
-                if (match) {
-                    let keysRaw = match[1].trim();
-                    let actionRaw = match[2].trim();
+                let startIdx = line.indexOf("hl.bind(") + 8;
+                let commaIdx = line.indexOf(",", startIdx);
+                if (commaIdx !== -1) {
+                    let keysRaw = line.substring(startIdx, commaIdx).trim();
+                    let rest = line.substring(commaIdx + 1).trim();
+                    
+                    let actionRaw = "";
+                    if (rest.endsWith("})")) {
+                        let lastBrace = rest.lastIndexOf("{");
+                        let optionsComma = rest.lastIndexOf(",", lastBrace);
+                        if (optionsComma !== -1) {
+                            actionRaw = rest.substring(0, optionsComma).trim();
+                        } else {
+                            actionRaw = rest.trim();
+                        }
+                    } else if (rest.endsWith(")")) {
+                        actionRaw = rest.substring(0, rest.length - 1).trim();
+                    } else {
+                        actionRaw = rest.trim();
+                    }
+
                     let keys = keysRaw
                         .replace(/mainMod\s*\.\.\s*"/g, "SUPER")
                         .replace(/"/g, "")
@@ -231,7 +248,13 @@ PanelWindow {
                     if (actionRaw.includes("exec_cmd")) {
                         let cmdMatch = actionRaw.match(/exec_cmd\(([^)]+)\)/);
                         if (cmdMatch) {
-                            rawCmd = cmdMatch[1].replace(/programs\./, "").replace(/"/g, "");
+                            let matchStr = cmdMatch[1].trim();
+                            if ((matchStr.startsWith('"') && matchStr.endsWith('"')) || 
+                                (matchStr.startsWith("'") && matchStr.endsWith("'"))) {
+                                rawCmd = matchStr.slice(1, -1);
+                            } else {
+                                rawCmd = matchStr;
+                            }
                         }
                     }
                     desc = desc.charAt(0).toUpperCase() + desc.slice(1);
@@ -498,6 +521,8 @@ PanelWindow {
                                 case 0: return "SettingsStyleView.qml";
                                 case 1: return "SettingsInterfaceView.qml";
                                 case 2: return "SettingsServicesView.qml";
+                                case 3: return "SettingsMonitorsView.qml";
+                                case 4: return "SettingsInputView.qml";
                                 default: return "";
                             }
                         }

@@ -121,6 +121,14 @@ PanelWindow {
         }
     }
 
+    property bool currentMuted: Pipewire.defaultAudioSink ? Pipewire.defaultAudioSink.audio.muted : false
+    onCurrentMutedChanged: {
+        if (currentMode === "default" || currentMode === "volume") {
+            currentMode = "volume";
+            volumeOsdTimer.restart();
+        }
+    }
+
     Timer {
         id: volumeOsdTimer
         interval: 3000

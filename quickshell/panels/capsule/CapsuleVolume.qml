@@ -14,7 +14,7 @@ Item {
             id: volIcon
             text: {
                 if (!Pipewire.defaultAudioSink) return "\uf026";
-                if (Pipewire.defaultAudioSink.audio.muted) return "\uf6a9";
+                if (Pipewire.defaultAudioSink.audio.muted) return "\uf026";
                 let v = Pipewire.defaultAudioSink.audio.volume;
                 if (v === 0) return "\uf026";
                 if (v < 0.3) return "\uf027";
@@ -22,7 +22,7 @@ Item {
             }
             font.family: Theme.fontFamily
             font.pixelSize: 13
-            color: Theme.accent
+            color: (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio.muted) ? Theme.fgMuted : Theme.accent
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -34,10 +34,15 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             Rectangle {
+                id: progressFill
                 width: parent.width * (Pipewire.defaultAudioSink ? Math.min(1.0, Pipewire.defaultAudioSink.audio.volume) : 0.0)
                 height: parent.height
                 radius: parent.radius
-                color: Theme.accent
+                color: (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio.muted) ? Theme.fgMuted : Theme.accent
+
+                Behavior on width {
+                    NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+                }
             }
         }
 
@@ -47,7 +52,7 @@ Item {
             font.family: Theme.fontFamily
             font.pixelSize: 12
             font.bold: true
-            color: "#ffffff"
+            color: (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio.muted) ? Theme.fgMuted : "#ffffff"
             anchors.verticalCenter: parent.verticalCenter
         }
     }

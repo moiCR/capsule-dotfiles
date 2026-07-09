@@ -91,7 +91,9 @@ Item {
                 model: [
                     { "icon": "\uf1fc", "name": Theme.currentLang === "es" ? "Estilo" : "Style" },
                     { "icon": "\uf11c", "name": Theme.currentLang === "es" ? "Interfaz" : "Interface" },
-                    { "icon": "\uf085", "name": Theme.currentLang === "es" ? "Servicios" : "Services" }
+                    { "icon": "\uf085", "name": Theme.currentLang === "es" ? "Servicios" : "Services" },
+                    { "icon": "\uf108", "name": Theme.currentLang === "es" ? "Pantallas" : "Displays" },
+                    { "icon": "\uf245", "name": Theme.currentLang === "es" ? "Entrada" : "Input" }
                 ]
 
                 delegate: Rectangle {

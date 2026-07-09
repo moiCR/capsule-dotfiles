@@ -8,6 +8,18 @@ def normalize_keys(keys_str):
     # Normalize a keys string for comparison (e.g. "SUPER + RETURN" -> "SUPER+RETURN")
     return keys_str.replace(" ", "").upper()
 
+def format_action(cmd):
+    cmd_stripped = cmd.strip()
+    if cmd_stripped.startswith("hl."):
+        # Native Lua dispatcher call
+        return cmd_stripped
+    elif cmd_stripped.startswith("programs."):
+        # Reference to a program variable
+        return f"hl.dsp.exec_cmd({cmd_stripped})"
+    else:
+        # Standard command string
+        return f'hl.dsp.exec_cmd("{cmd_stripped}")'
+
 def get_line_keys(line):
     # Parse keys from a lua line: hl.bind("keys", action) or hl.bind(mainMod .. " + keys", action)
     match = re.search(r'hl\.bind\(([^,]+),', line)
@@ -59,7 +71,8 @@ def main():
         else:
             lua_keys = f'"{keys}"'
             
-        new_line = f'\nhl.bind({lua_keys}, hl.dsp.exec_cmd("{cmd}"))\n'
+        action_val = format_action(cmd)
+        new_line = f'\nhl.bind({lua_keys}, {action_val})\n'
         lines.append(new_line)
         write_keybinds(lines)
         print("Bind added successfully")
@@ -108,7 +121,8 @@ def main():
         else:
             lua_keys = f'"{new_keys}"'
             
-        new_bind_line = f'hl.bind({lua_keys}, hl.dsp.exec_cmd("{new_cmd}"))\n'
+        action_val = format_action(new_cmd)
+        new_bind_line = f'hl.bind({lua_keys}, {action_val})\n'
         
         for line in lines:
             line_keys = get_line_keys(line)
